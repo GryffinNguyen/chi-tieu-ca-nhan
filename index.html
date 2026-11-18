@@ -68,4 +68,1129 @@
     .bucket-row { background: rgba(0,0,0,0.22); border-radius: 14px; padding: 12px; margin-top: 8px; border: 1px solid rgba(255,255,255,0.04); }
     .bucket-top { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
 
-    .list-item { display:
+    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 11px 12px; background: var(--card2); border-radius: 12px; margin-top: 8px; gap: 8px; }
+    .item-left { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+    .item-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-meta { font-size: 11.5px; color: var(--sub); }
+    .item-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .amt-in { color: var(--green); font-weight: 700; font-size: 14px; }
+    .amt-out { color: var(--text); font-weight: 700; font-size: 14px; }
+
+    /* BUTTONS & INPUTS */
+    .btn { border: none; padding: 11px 14px; border-radius: 12px; font-size: 13.5px; font-weight: 600; cursor: pointer; color: #fff; background: var(--blue); text-align: center; }
+    .btn:active { opacity: 0.8; }
+    .btn-sm { padding: 6px 10px; font-size: 12px; border-radius: 8px; }
+    .btn-ghost { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+    .btn-green { background: var(--green); color: #052e16; font-weight: 700; }
+    .btn-red { background: rgba(239,68,68,0.18); color: var(--red); }
+    .btn-orange { background: rgba(245,158,11,0.18); color: var(--orange); }
+
+    label.field-label { display: block; font-size: 11.5px; color: var(--sub); margin-bottom: 4px; font-weight: 600; }
+    input, select { width: 100%; background: var(--card2); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; border-radius: 10px; font-size: 14px; outline: none; }
+    input:focus, select:focus { border-color: var(--blue); }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+
+    /* ROOMMATE STATUS BADGES */
+    .rm-status-box { display: flex; justify-content: space-between; align-items: center; background: var(--card2); padding: 10px 12px; border-radius: 10px; margin-top: 6px; gap: 8px; }
+    .badge-paid { background: rgba(16,185,129,0.2); color: var(--green); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+    .badge-unpaid { background: rgba(245,158,11,0.2); color: var(--orange); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+
+    /* BOTTOM NAV BAR */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(21, 28, 44, 0.94);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--border);
+      padding: 8px 12px calc(env(safe-area-inset-bottom, 16px) + 4px);
+      display: grid; grid-template-columns: 1fr 1fr 64px 1fr 1fr;
+      align-items: center; z-index: 40;
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--sub); font-size: 10.5px; font-weight: 600; cursor: pointer; }
+    .nav-item.active { color: var(--blue); }
+    .nav-plus { width: 52px; height: 52px; border-radius: 26px; background: var(--blue); color: #fff; border: none; font-size: 28px; display: flex; align-items: center; justify-content: center; margin: -18px auto 0; box-shadow: 0 6px 20px rgba(59,130,246,0.45); cursor: pointer; }
+
+    /* MODALS */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 100; display: none; align-items: flex-end; }
+    .modal-backdrop.open { display: flex; }
+    .modal-sheet { width: 100%; background: var(--card); border-radius: 24px 24px 0 0; padding: 16px 16px calc(env(safe-area-inset-bottom, 20px) + 14px); border-top: 1px solid var(--border); max-height: 90dvh; overflow-y: auto; }
+    .type-toggle { display: flex; background: var(--bg); padding: 4px; border-radius: 12px; margin-bottom: 12px; }
+    .type-btn { flex: 1; padding: 9px; border: none; background: transparent; color: var(--sub); font-weight: 700; font-size: 13.5px; border-radius: 9px; cursor: pointer; }
+    .type-btn.active-exp { background: var(--red); color: #fff; }
+    .type-btn.active-inc { background: var(--green); color: #052e16; }
+
+    .calc-display { background: var(--bg); padding: 12px 14px; border-radius: 12px; text-align: right; font-size: 26px; font-weight: 800; margin-bottom: 10px; border: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+    .numpad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; }
+    .num-key { background: var(--card2); border: none; color: var(--text); padding: 13px 0; border-radius: 10px; font-size: 17px; font-weight: 700; cursor: pointer; }
+    .num-key:active { background: var(--blue); }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="app-header">
+    <div class="brand-row">
+      <div class="logo-badge">đ</div>
+      <div>
+        <div class="app-title">Chi Tiêu Hybrid <span class="offline-pill">Offline</span></div>
+        <div class="app-sub" id="headerSubText">Đang tải...</div>
+      </div>
+    </div>
+    <button class="icon-btn" onclick="togglePrivacy()" title="Ẩn/Hiện số tiền">👁️</button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-view">
+
+    <!-- ================= TAB 1: TỔNG QUAN ================= -->
+    <div class="tab-page active" id="page-home">
+      <div class="card hero-card">
+        <div class="card-header" style="margin-bottom:2px;">
+          <span style="font-size:11px; font-weight:700; color:var(--sub);">HẠN MỨC AN TOÀN HÔM NAY (SAFE-TO-SPEND)</span>
+          <span class="status-badge">● An toàn</span>
+        </div>
+        <div class="s2s-amount" id="s2sValue">0 ₫</div>
+        <div class="card-sub" id="s2sSubInfo">Hôm nay đã tiêu: 0 ₫</div>
+
+        <div class="pacing-box">
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--sub); margin-bottom:4px;">
+              <span>Thời gian tháng đã qua</span>
+              <span id="timePctLabel">0%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" id="timeBar" style="background:var(--blue); width:0%;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--sub); margin-bottom:4px;">
+              <span>Ngân sách linh hoạt đã tiêu</span>
+              <span id="spentPctLabel">0%</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" id="spentBar" style="background:var(--green); width:0%;"></div></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; padding-top:4px;">
+            <span style="color:var(--sub);">Quỹ linh hoạt còn: <strong style="color:var(--text);" id="flexRemainingLabel">0 ₫</strong></span>
+            <span style="color:var(--blue); font-weight:600;" id="pacingRatioLabel">Nhịp độ: 0.0x</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GHI NHANH 1 CHẠM (CÓ NÚT SỬA TRỰC TIẾP CÁC MỤC) -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">⚡ CHẠM 1 LẦN GHI NHANH</span>
+          <span style="font-size:12px; color:var(--blue); font-weight:600; cursor:pointer;" onclick="switchTab('envelopes', document.getElementById('navEnv'))">✎ Sửa các mục</span>
+        </div>
+        <div class="chips-scroll" id="quickChipsContainer"></div>
+      </div>
+
+      <!-- CẤU TRÚC HYBRID & THU NHẬP THỰC TẾ -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Quỹ Hiện Tại & Thu Nhập</div>
+            <div class="card-sub" id="totalInflowLabel">Tổng thu đã nhận: 0 ₫</div>
+          </div>
+          <button class="btn btn-sm btn-green" onclick="openTxModal('INCOME')">+ Nhập khoản thu</button>
+        </div>
+        <div id="bucketsContainer"></div>
+      </div>
+
+      <!-- LỊCH SỬ GIAO DỊCH GẦN ĐÂY -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Giao dịch Thu / Chi gần đây</span>
+        </div>
+        <div id="recentTxList"></div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 2: PHONG BÌ (TỰ CHỈNH SỬA MỌI NỘI DUNG) ================= -->
+    <div class="tab-page" id="page-envelopes">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Danh mục Chi tiêu (Phong bì)</div>
+            <div class="card-sub">Bấm nút "Sửa" ở bất kỳ mục nào để đổi tên, mức tiền nhanh hoặc số dư</div>
+          </div>
+          <button class="btn btn-sm" onclick="openEnvelopeModal(null)">+ Thêm mục mới</button>
+        </div>
+        <div id="envelopesListContainer"></div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 3: TIỀN PHÒNG (TIỀN NHÀ RIÊNG & ĐIỆN NƯỚC RIÊNG) ================= -->
+    <div class="tab-page" id="page-roommates">
+
+      <!-- 1. MỤC NHẬP TIỀN HỌ NỘP CHO TÔI -->
+      <div class="card" style="border-color: rgba(16,185,129,0.35);">
+        <div class="card-header">
+          <div>
+            <div class="card-title" style="color:var(--green);">💸 Nhập Tiền Họ Nộp Cho Tôi</div>
+            <div class="card-sub">Ghi nhận khi người ở cùng đưa tiền hoặc chuyển khoản cho bạn</div>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div>
+            <label class="field-label">Người nộp</label>
+            <select id="payRmSel"></select>
+          </div>
+          <div>
+            <label class="field-label">Khoản nộp</label>
+            <select id="payTypeSel">
+              <option value="RENT">🏠 Tiền nhà</option>
+              <option value="UTIL">⚡💧 Tiền điện nước</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-grid" style="grid-template-columns: 1.3fr 1fr;">
+          <div>
+            <label class="field-label">Số tiền họ nộp (đ)</label>
+            <input type="number" id="payAmountInp" placeholder="VD: 1500000">
+          </div>
+          <div style="display:flex; align-items:flex-end;">
+            <button class="btn btn-green" style="width:100%;" onclick="recordRoommatePayment()">+ Lưu đã nộp</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. TIỀN NHÀ RIÊNG -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">🏠 Tiền Nhà Riêng</div>
+            <div class="card-sub">Quản lý mức tiền nhà mỗi người và phần tiền nhà của riêng bạn</div>
+          </div>
+          <button class="btn btn-sm btn-ghost" onclick="deductMyRentToEnvelope()">Trừ phần tôi vào Phong bì</button>
+        </div>
+        <div class="form-grid">
+          <div>
+            <label class="field-label">Tiền nhà của riêng tôi (đ)</label>
+            <input type="number" id="myRentInp" placeholder="VD: 1500000" onchange="saveRentSettings()">
+          </div>
+          <div>
+            <label class="field-label">Trừ vào mục chi tiêu</label>
+            <select id="housingEnvSel" onchange="saveRentSettings()"></select>
+          </div>
+        </div>
+        <div id="rentBreakdownUI"></div>
+      </div>
+
+      <!-- 3. TIỀN ĐIỆN NƯỚC RIÊNG -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">⚡💧 Tiền Điện Nước Riêng</div>
+            <div class="card-sub">Tự động tách theo % điện nước của từng người và phần của bạn</div>
+          </div>
+          <button class="btn btn-sm btn-ghost" onclick="deductMyUtilToEnvelope()">Trừ phần tôi vào Phong bì</button>
+        </div>
+        <div class="form-grid">
+          <div>
+            <label class="field-label">Tiền Điện tháng này (đ)</label>
+            <input type="number" id="elecBillInp" placeholder="VD: 900000" oninput="saveUtilSettings()">
+          </div>
+          <div>
+            <label class="field-label">Tiền Nước / Phụ phí (đ)</label>
+            <input type="number" id="waterBillInp" placeholder="VD: 150000" oninput="saveUtilSettings()">
+          </div>
+        </div>
+        <div id="utilBreakdownUI"></div>
+      </div>
+
+      <!-- 4. DANH SÁCH NGƯỜI Ở CÙNG (THÊM / SỬA / XÓA) -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">👥 Người ở cùng (Thêm / Sửa / Xóa)</div>
+            <div class="card-sub">Chỉnh tên, tiền nhà cố định và % chia điện nước của từng người</div>
+          </div>
+          <button class="btn btn-sm" onclick="openRoommateModal(null)">+ Thêm người</button>
+        </div>
+        <div id="roommatesListUI"></div>
+      </div>
+
+      <!-- 5. LỊCH SỬ CÁC LẦN HỌ NỘP TIỀN TRONG THÁNG -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Lịch sử họ nộp tiền tháng này</span>
+          <button class="btn btn-sm btn-red" onclick="clearHousingPaymentsMonth()">Làm mới tháng</button>
+        </div>
+        <div id="rmPaymentHistoryUI"></div>
+      </div>
+
+    </div>
+
+    <!-- ================= TAB 4: ĐỐI CHIẾU CUỐI THÁNG & SAO LƯU ================= -->
+    <div class="tab-page" id="page-reconcile">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📊 Đối Chiếu Cuối Tháng</span>
+        </div>
+        <div id="reconcileSummaryBox"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px;">
+          <button class="btn btn-green" onclick="rolloverMonth()">Kết sổ tháng mới</button>
+          <button class="btn btn-ghost" onclick="shareRoommateReport()">Xuất bảng kê phòng</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">🛡️ Sao Lưu & Khởi Tạo Dữ Liệu</div>
+            <div class="card-sub">Dữ liệu lưu trên iPhone của bạn, không mất khi cập nhật GitHub</div>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <button class="btn btn-ghost" onclick="exportBackupJson()">⬇️ Tải file sao lưu (.json)</button>
+          <input type="file" id="importFileInp" accept=".json" style="display:none;" onchange="importBackupJson(event)">
+          <button class="btn btn-ghost" onclick="document.getElementById('importFileInp').click()">⬆️ Khôi phục từ file sao lưu</button>
+          <button class="btn btn-red" onclick="resetToZeroClean()">🗑️ Đặt lại số dư & giao dịch về 0đ</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <div class="bottom-nav">
+    <div class="nav-item active" id="navHome" onclick="switchTab('home', this)"><span>📊</span><span>Tổng quan</span></div>
+    <div class="nav-item" id="navEnv" onclick="switchTab('envelopes', this)"><span>✉️</span><span>Các mục</span></div>
+    <button class="nav-plus" onclick="openTxModal('EXPENSE')">+</button>
+    <div class="nav-item" id="navRm" onclick="switchTab('roommates', this)"><span>🏠</span><span>Tiền phòng</span></div>
+    <div class="nav-item" id="navRec" onclick="switchTab('reconcile', this)"><span>⚖️</span><span>Đối chiếu</span></div>
+  </div>
+
+  <!-- ================= MODAL 1: NHẬP CHI TIÊU / THU NHẬP ================= -->
+  <div class="modal-backdrop" id="txModal">
+    <div class="modal-sheet">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-weight:700; font-size:15px;">Ghi giao dịch mới</span>
+        <button class="btn btn-sm btn-ghost" onclick="closeModal('txModal')">Đóng ✕</button>
+      </div>
+
+      <div class="type-toggle">
+        <button class="type-btn active-exp" id="tabBtnExp" onclick="setModalType('EXPENSE')">➖ Chi tiêu</button>
+        <button class="type-btn" id="tabBtnInc" onclick="setModalType('INCOME')">➕ Thu nhập (Nhận tiền)</button>
+      </div>
+
+      <div class="calc-display" id="calcDisplay">0</div>
+
+      <div class="form-grid">
+        <input type="text" id="txNoteInp" placeholder="Ghi chú (VD: Job quay, Cà phê...)">
+        <select id="txTargetSel"></select>
+      </div>
+
+      <div class="numpad">
+        <button class="num-key" onclick="pressKey('7')">7</button>
+        <button class="num-key" onclick="pressKey('8')">8</button>
+        <button class="num-key" onclick="pressKey('9')">9</button>
+        <button class="num-key" onclick="pressKey('DEL')">⌫</button>
+        <button class="num-key" onclick="pressKey('4')">4</button>
+        <button class="num-key" onclick="pressKey('5')">5</button>
+        <button class="num-key" onclick="pressKey('6')">6</button>
+        <button class="num-key" onclick="pressKey('+')">+</button>
+        <button class="num-key" onclick="pressKey('1')">1</button>
+        <button class="num-key" onclick="pressKey('2')">2</button>
+        <button class="num-key" onclick="pressKey('3')">3</button>
+        <button class="num-key" onclick="pressKey('000')">000</button>
+        <button class="num-key" onclick="pressKey('C')">C</button>
+        <button class="num-key" onclick="pressKey('0')">0</button>
+        <button class="num-key" style="grid-column: span 2; background:var(--blue); color:#fff;" onclick="submitModalTx()">LƯU GIAO DỊCH</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 2: SỬA / THÊM MỤC CHI TIÊU (PHONG BÌ) ================= -->
+  <div class="modal-backdrop" id="envModal">
+    <div class="modal-sheet">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <span style="font-weight:700; font-size:16px;" id="envModalTitle">Chỉnh sửa mục chi tiêu</span>
+        <button class="btn btn-sm btn-ghost" onclick="closeModal('envModal')">Đóng ✕</button>
+      </div>
+      <input type="hidden" id="editEnvId">
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div>
+          <label class="field-label">Tên mục (kèm icon tùy thích)</label>
+          <input type="text" id="editEnvName" placeholder="VD: 🍲 Ăn ngoài & Tụ tập">
+        </div>
+        <div class="form-grid">
+          <div>
+            <label class="field-label">Nhóm ngân sách</label>
+            <select id="editEnvBucket">
+              <option value="WANTS">Linh hoạt (Tính vào hạn mức ngày)</option>
+              <option value="NEEDS">Thiết yếu (Tiền nhà, cố định)</option>
+              <option value="SAVINGS">Tích lũy & Dự phòng</option>
+            </select>
+          </div>
+          <div>
+            <label class="field-label">Số tiền chạm nhanh (đ)</label>
+            <input type="number" id="editEnvQuick" placeholder="VD: 45000">
+          </div>
+        </div>
+        <div class="form-grid">
+          <div>
+            <label class="field-label">Số dư hiện tại (đ)</label>
+            <input type="number" id="editEnvBalance" placeholder="VD: 2000000">
+          </div>
+          <div>
+            <label class="field-label">Hạn mức phân bổ (đ)</label>
+            <input type="number" id="editEnvAllocated" placeholder="VD: 2000000">
+          </div>
+        </div>
+        <button class="btn" style="width:100%; margin-top:4px;" onclick="saveEnvelopeModal()">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 3: SỬA / THÊM NGƯỜI Ở CÙNG ================= -->
+  <div class="modal-backdrop" id="rmModal">
+    <div class="modal-sheet">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <span style="font-weight:700; font-size:16px;" id="rmModalTitle">Thông tin người ở cùng</span>
+        <button class="btn btn-sm btn-ghost" onclick="closeModal('rmModal')">Đóng ✕</button>
+      </div>
+      <input type="hidden" id="editRmId">
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div>
+          <label class="field-label">Tên người ở cùng</label>
+          <input type="text" id="editRmName" placeholder="VD: Dung">
+        </div>
+        <div class="form-grid">
+          <div>
+            <label class="field-label">Tiền nhà mỗi tháng (đ)</label>
+            <input type="number" id="editRmRent" placeholder="VD: 1500000">
+          </div>
+          <div>
+            <label class="field-label">% Chia điện nước</label>
+            <input type="number" id="editRmWeight" placeholder="VD: 35">
+          </div>
+        </div>
+        <button class="btn" style="width:100%; margin-top:4px;" onclick="saveRoommateModal()">Lưu người ở cùng</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+// ================= 1. KHỞI TẠO & ĐỒNG BỘ DỮ LIỆU CŨ =================
+const STORAGE_KEY = 'chi_tieu_hybrid_pro_v2';
+let isPrivate = false;
+let modalMode = 'EXPENSE';
+let calcExpr = '';
+
+const defaultState = {
+  weights: { NEEDS: 0.50, WANTS: 0.30, SAVINGS: 0.20 },
+  envelopes: [
+    { id: 'env_house', name: '🏠 Tiền nhà & Điện nước', bucket: 'NEEDS', allocated: 0, balance: 0, quickAmt: 500000 },
+    { id: 'env_food', name: '🍲 Ăn ngoài & Tụ tập', bucket: 'WANTS', allocated: 0, balance: 0, quickAmt: 50000 },
+    { id: 'env_cafe', name: '☕ Cà phê & Nước', bucket: 'WANTS', allocated: 0, balance: 0, quickAmt: 35000 },
+    { id: 'env_gear', name: '📷 Mua sắm & Đồ nghề', bucket: 'WANTS', allocated: 0, balance: 0, quickAmt: 200000 },
+    { id: 'env_pet', name: '🐱 Thức ăn & Cát mèo', bucket: 'NEEDS', allocated: 0, balance: 0, quickAmt: 150000 },
+    { id: 'env_save', name: '🛡️ Quỹ Tích lũy', bucket: 'SAVINGS', allocated: 0, balance: 0, quickAmt: 500000 }
+  ],
+  roommates: [
+    { id: 'rm_1', name: 'Dung', weight: 35, rentShare: 1500000 },
+    { id: 'rm_2', name: 'Người ở cùng 2', weight: 30, rentShare: 1500000 }
+  ],
+  housing: {
+    myRent: 1500000,
+    targetEnvId: 'env_house',
+    elecBill: 0,
+    waterBill: 0,
+    payments: [] // { id, rmId, rmName, type: 'RENT'|'UTIL', amount, date }
+  },
+  transactions: []
+};
+
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+if (!state) {
+  state = defaultState;
+} else {
+  // Đảm bảo tương thích ngược với dữ liệu cũ của bạn
+  if (!state.housing) {
+    state.housing = {
+      myRent: 1500000,
+      targetEnvId: (state.envelopes && state.envelopes[0]) ? state.envelopes[0].id : 'env_house',
+      elecBill: 0,
+      waterBill: 0,
+      payments: []
+    };
+  }
+  if (Array.isArray(state.roommates)) {
+    state.roommates.forEach(r => {
+      if (typeof r.rentShare !== 'number') r.rentShare = 1500000;
+      if (typeof r.weight !== 'number') r.weight = 35;
+    });
+  } else {
+    state.roommates = defaultState.roommates;
+  }
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  renderAll();
+}
+
+function fmtVND(n) {
+  if (isPrivate) return '•••••• ₫';
+  return Math.round(n || 0).toLocaleString('vi-VN') + ' ₫';
+}
+
+function togglePrivacy() {
+  isPrivate = !isPrivate;
+  renderAll();
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// ================= 2. LOGIC TOÁN HỌC HYBRID & SAFE-TO-SPEND =================
+function getMonthStats() {
+  const now = new Date();
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const currentDay = now.getDate();
+  const remainingDays = Math.max(1, daysInMonth - currentDay + 1);
+  const todayISO = now.toISOString().slice(0, 10);
+
+  const wantsEnvs = state.envelopes.filter(e => e.bucket === 'WANTS');
+  const totalFlexAllocated = wantsEnvs.reduce((s, e) => s + Math.max(0, e.allocated), 0);
+  const totalFlexRemaining = wantsEnvs.reduce((s, e) => s + Math.max(0, e.balance), 0);
+
+  const spentToday = state.transactions
+    .filter(t => t.type === 'EXPENSE' && t.date.startsWith(todayISO))
+    .reduce((s, t) => s + t.amount, 0);
+
+  const safeToSpendToday = totalFlexRemaining / remainingDays;
+  const timePct = Math.round((currentDay / daysInMonth) * 100);
+  const spentFlex = Math.max(0, totalFlexAllocated - totalFlexRemaining);
+  const spentPct = totalFlexAllocated > 0 ? Math.min(100, Math.round((spentFlex / totalFlexAllocated) * 100)) : 0;
+  const pacing = timePct > 0 ? (spentPct / timePct) : 0;
+
+  const totalIncomeMonth = state.transactions
+    .filter(t => t.type === 'INCOME')
+    .reduce((s, t) => s + t.amount, 0);
+
+  const totalExpenseMonth = state.transactions
+    .filter(t => t.type === 'EXPENSE')
+    .reduce((s, t) => s + t.amount, 0);
+
+  return {
+    now, daysInMonth, currentDay, remainingDays,
+    totalFlexAllocated, totalFlexRemaining, spentToday,
+    safeToSpendToday, timePct, spentPct, pacing,
+    totalIncomeMonth, totalExpenseMonth
+  };
+}
+
+// ================= 3. GHI THU NHẬP & CHI TIÊU =================
+function recordIncome(amount, note, targetMode) {
+  if (amount <= 0) return;
+  if (targetMode === 'AUTO_50_30_20') {
+    ['NEEDS', 'WANTS', 'SAVINGS'].forEach(bucketKey => {
+      const bucketShare = amount * (state.weights[bucketKey] || 0);
+      const envs = state.envelopes.filter(e => e.bucket === bucketKey);
+      if (envs.length > 0) {
+        const perEnv = bucketShare / envs.length;
+        envs.forEach(e => {
+          e.allocated += perEnv;
+          e.balance += perEnv;
+        });
+      }
+    });
+  } else {
+    const env = state.envelopes.find(e => e.id === targetMode);
+    if (env) {
+      env.allocated += amount;
+      env.balance += amount;
+    }
+  }
+
+  state.transactions.unshift({
+    id: 'tx_' + Date.now(),
+    type: 'INCOME',
+    amount,
+    note: note || 'Khoản thu nhập',
+    target: targetMode,
+    date: new Date().toISOString()
+  });
+  saveState();
+}
+
+function recordExpense(amount, note, envId) {
+  if (amount <= 0) return;
+  const env = state.envelopes.find(e => e.id === envId) || state.envelopes[0];
+  if (env) env.balance -= amount;
+
+  state.transactions.unshift({
+    id: 'tx_' + Date.now(),
+    type: 'EXPENSE',
+    amount,
+    note: note || (env ? env.name : 'Chi tiêu'),
+    envId: env ? env.id : '',
+    date: new Date().toISOString()
+  });
+  saveState();
+}
+
+function deleteTransaction(txId) {
+  const idx = state.transactions.findIndex(t => t.id === txId);
+  if (idx === -1) return;
+  const tx = state.transactions[idx];
+
+  if (tx.type === 'EXPENSE' && tx.envId) {
+    const env = state.envelopes.find(e => e.id === tx.envId);
+    if (env) env.balance += tx.amount;
+  } else if (tx.type === 'INCOME') {
+    if (tx.target === 'AUTO_50_30_20') {
+      ['NEEDS', 'WANTS', 'SAVINGS'].forEach(bucketKey => {
+        const bucketShare = tx.amount * (state.weights[bucketKey] || 0);
+        const envs = state.envelopes.filter(e => e.bucket === bucketKey);
+        if (envs.length > 0) {
+          const perEnv = bucketShare / envs.length;
+          envs.forEach(e => {
+            e.allocated = Math.max(0, e.allocated - perEnv);
+            e.balance -= perEnv;
+          });
+        }
+      });
+    } else {
+      const env = state.envelopes.find(e => e.id === tx.target);
+      if (env) {
+        env.allocated = Math.max(0, env.allocated - tx.amount);
+        env.balance -= tx.amount;
+      }
+    }
+  }
+  state.transactions.splice(idx, 1);
+  saveState();
+}
+
+// ================= 4. CHỈNH SỬA TRỰC TIẾP CÁC MỤC CHI TIÊU (MODAL) =================
+function openEnvelopeModal(envId) {
+  const env = state.envelopes.find(e => e.id === envId);
+  if (env) {
+    document.getElementById('envModalTitle').textContent = 'Chỉnh sửa mục chi tiêu';
+    document.getElementById('editEnvId').value = env.id;
+    document.getElementById('editEnvName').value = env.name;
+    document.getElementById('editEnvBucket').value = env.bucket;
+    document.getElementById('editEnvQuick').value = env.quickAmt || 50000;
+    document.getElementById('editEnvBalance').value = Math.round(env.balance);
+    document.getElementById('editEnvAllocated').value = Math.round(env.allocated);
+  } else {
+    document.getElementById('envModalTitle').textContent = 'Thêm mục chi tiêu mới';
+    document.getElementById('editEnvId').value = '';
+    document.getElementById('editEnvName').value = '';
+    document.getElementById('editEnvBucket').value = 'WANTS';
+    document.getElementById('editEnvQuick').value = 50000;
+    document.getElementById('editEnvBalance').value = 0;
+    document.getElementById('editEnvAllocated').value = 0;
+  }
+  document.getElementById('envModal').classList.add('open');
+}
+
+function saveEnvelopeModal() {
+  const id = document.getElementById('editEnvId').value;
+  const name = document.getElementById('editEnvName').value.trim();
+  const bucket = document.getElementById('editEnvBucket').value;
+  const quickAmt = parseFloat(document.getElementById('editEnvQuick').value) || 50000;
+  const balance = parseFloat(document.getElementById('editEnvBalance').value) || 0;
+  const allocated = parseFloat(document.getElementById('editEnvAllocated').value) || Math.max(0, balance);
+
+  if (!name) return alert('Vui lòng nhập tên mục!');
+
+  if (id) {
+    const env = state.envelopes.find(e => e.id === id);
+    if (env) {
+      env.name = name;
+      env.bucket = bucket;
+      env.quickAmt = quickAmt;
+      env.balance = balance;
+      env.allocated = allocated;
+    }
+  } else {
+    state.envelopes.push({
+      id: 'env_' + Date.now(),
+      name,
+      bucket,
+      quickAmt,
+      balance,
+      allocated
+    });
+  }
+
+  closeModal('envModal');
+  saveState();
+}
+
+function deleteEnvelope(envId) {
+  if (state.envelopes.length <= 1) return alert('Cần giữ lại ít nhất 1 mục chi tiêu.');
+  state.envelopes = state.envelopes.filter(e => e.id !== envId);
+  saveState();
+}
+
+// ================= 5. TIỀN NHÀ RIÊNG, ĐIỆN NƯỚC RIÊNG & TIỀN HỌ NỘP CHO TÔI =================
+function openRoommateModal(rmId) {
+  const rm = state.roommates.find(r => r.id === rmId);
+  if (rm) {
+    document.getElementById('rmModalTitle').textContent = 'Sửa thông tin người ở cùng';
+    document.getElementById('editRmId').value = rm.id;
+    document.getElementById('editRmName').value = rm.name;
+    document.getElementById('editRmRent').value = rm.rentShare || 0;
+    document.getElementById('editRmWeight').value = rm.weight || 30;
+  } else {
+    document.getElementById('rmModalTitle').textContent = 'Thêm người ở cùng';
+    document.getElementById('editRmId').value = '';
+    document.getElementById('editRmName').value = '';
+    document.getElementById('editRmRent').value = 1500000;
+    document.getElementById('editRmWeight').value = 30;
+  }
+  document.getElementById('rmModal').classList.add('open');
+}
+
+function saveRoommateModal() {
+  const id = document.getElementById('editRmId').value;
+  const name = document.getElementById('editRmName').value.trim();
+  const rentShare = parseFloat(document.getElementById('editRmRent').value) || 0;
+  const weight = parseFloat(document.getElementById('editRmWeight').value) || 0;
+
+  if (!name) return alert('Vui lòng nhập tên người ở cùng!');
+
+  if (id) {
+    const rm = state.roommates.find(r => r.id === id);
+    if (rm) {
+      rm.name = name;
+      rm.rentShare = rentShare;
+      rm.weight = weight;
+    }
+  } else {
+    state.roommates.push({ id: 'rm_' + Date.now(), name, rentShare, weight });
+  }
+  closeModal('rmModal');
+  saveState();
+}
+
+function removeRoommate(rmId) {
+  state.roommates = state.roommates.filter(r => r.id !== rmId);
+  saveState();
+}
+
+function saveRentSettings() {
+  state.housing.myRent = parseFloat(document.getElementById('myRentInp').value) || 0;
+  state.housing.targetEnvId = document.getElementById('housingEnvSel').value;
+  saveState();
+}
+
+function saveUtilSettings() {
+  state.housing.elecBill = parseFloat(document.getElementById('elecBillInp').value) || 0;
+  state.housing.waterBill = parseFloat(document.getElementById('waterBillInp').value) || 0;
+  saveState();
+}
+
+// Ghi nhận khi họ nộp tiền cho tôi
+function recordRoommatePayment(customRmId, customType, customAmt) {
+  const rmId = customRmId || document.getElementById('payRmSel').value;
+  const type = customType || document.getElementById('payTypeSel').value;
+  const amt = customAmt !== undefined ? customAmt : (parseFloat(document.getElementById('payAmountInp').value) || 0);
+
+  const rm = state.roommates.find(r => r.id === rmId);
+  if (!rm || amt <= 0) return alert('Vui lòng nhập số tiền họ nộp!');
+
+  state.housing.payments.unshift({
+    id: 'pay_' + Date.now(),
+    rmId: rm.id,
+    rmName: rm.name,
+    type, // 'RENT' hoặc 'UTIL'
+    amount: amt,
+    date: new Date().toLocaleDateString('vi-VN')
+  });
+
+  if (!customAmt) document.getElementById('payAmountInp').value = '';
+  saveState();
+}
+
+function deleteRoommatePayment(payId) {
+  state.housing.payments = state.housing.payments.filter(p => p.id !== payId);
+  saveState();
+}
+
+function clearHousingPaymentsMonth() {
+  state.housing.payments = [];
+  saveState();
+}
+
+function deductMyRentToEnvelope() {
+  const amt = state.housing.myRent || 0;
+  if (amt <= 0) return alert('Hãy nhập số tiền nhà của riêng bạn trước!');
+  recordExpense(amt, '🏠 Đóng tiền nhà (Phần của tôi)', state.housing.targetEnvId);
+}
+
+function deductMyUtilToEnvelope() {
+  const totalUtil = (state.housing.elecBill || 0) + (state.housing.waterBill || 0);
+  const rmWeights = state.roommates.reduce((s, r) => s + (r.weight || 0), 0);
+  const myWeight = Math.max(0, 100 - rmWeights);
+  const myUtilAmt = Math.round((totalUtil * myWeight) / 100);
+  if (myUtilAmt <= 0) return alert('Chưa có hóa đơn điện nước để trừ!');
+  recordExpense(myUtilAmt, `⚡💧 Điện nước phần của tôi (${myWeight}%)`, state.housing.targetEnvId);
+}
+
+// ================= 6. ĐỐI CHIẾU CUỐI THÁNG & SAO LƯU =================
+function rolloverMonth() {
+  let swept = 0;
+  state.envelopes.forEach(e => {
+    if (e.bucket === 'WANTS' && e.balance > 0) {
+      swept += e.balance;
+      e.balance = 0;
+      e.allocated = 0;
+    } else if (e.bucket === 'NEEDS') {
+      e.allocated = Math.max(0, e.balance);
+    }
+  });
+  const saveEnv = state.envelopes.find(e => e.bucket === 'SAVINGS') || state.envelopes[state.envelopes.length - 1];
+  if (saveEnv && swept > 0) {
+    saveEnv.balance += swept;
+    saveEnv.allocated += swept;
+  }
+  state.transactions = [];
+  state.housing.payments = [];
+  saveState();
+}
+
+function shareRoommateReport() {
+  const totalUtil = (state.housing.elecBill || 0) + (state.housing.waterBill || 0);
+  let lines = ['📋 BẢNG ĐỐI CHIẾU TIỀN NHÀ & ĐIỆN NƯỚC:'];
+
+  state.roommates.forEach(r => {
+    const paidRent = state.housing.payments.filter(p => p.rmId === r.id && p.type === 'RENT').reduce((s, p) => s + p.amount, 0);
+    const dueRent = Math.max(0, (r.rentShare || 0) - paidRent);
+
+    const utilShare = Math.round((totalUtil * (r.weight || 0)) / 100);
+    const paidUtil = state.housing.payments.filter(p => p.rmId === r.id && p.type === 'UTIL').reduce((s, p) => s + p.amount, 0);
+    const dueUtil = Math.max(0, utilShare - paidUtil);
+
+    lines.push(`\n👤 ${r.name}:`);
+    lines.push(`  • Tiền nhà: Phải đóng ${fmtVND(r.rentShare)} | Đã nộp: ${fmtVND(paidRent)} | Còn thiếu: ${fmtVND(dueRent)}`);
+    lines.push(`  • Điện nước (${r.weight}%): Phải đóng ${fmtVND(utilShare)} | Đã nộp: ${fmtVND(paidUtil)} | Còn thiếu: ${fmtVND(dueUtil)}`);
+  });
+
+  const text = lines.join('\n');
+  if (navigator.share) {
+    navigator.share({ title: 'Đối chiếu tiền phòng', text }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(text);
+    alert('Đã sao chép bảng kê vào bộ nhớ tạm!');
+  }
+}
+
+function exportBackupJson() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.download = `backup_chitieu_${new Date().toISOString().slice(0,10)}.json`;
+  a.href = URL.createObjectURL(blob);
+  a.click();
+}
+
+function importBackupJson(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const parsed = JSON.parse(ev.target.result);
+      if (parsed && Array.isArray(parsed.envelopes)) {
+        state = parsed;
+        saveState();
+      }
+    } catch (err) { alert('File sao lưu không hợp lệ!'); }
+  };
+  reader.readAsText(file);
+}
+
+function resetToZeroClean() {
+  state.envelopes.forEach(e => { e.allocated = 0; e.balance = 0; });
+  state.transactions = [];
+  state.housing.payments = [];
+  state.housing.elecBill = 0;
+  state.housing.waterBill = 0;
+  saveState();
+}
+
+// ================= 7. BÀN PHÍM MODAL & ĐIỀU HƯỚNG =================
+function switchTab(tab, el) {
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById(`page-${tab}`).classList.add('active');
+}
+
+function openTxModal(mode) {
+  calcExpr = '';
+  document.getElementById('calcDisplay').textContent = '0';
+  document.getElementById('txNoteInp').value = '';
+  setModalType(mode);
+  document.getElementById('txModal').classList.add('open');
+}
+
+function setModalType(mode) {
+  modalMode = mode;
+  document.getElementById('tabBtnExp').className = 'type-btn ' + (mode === 'EXPENSE' ? 'active-exp' : '');
+  document.getElementById('tabBtnInc').className = 'type-btn ' + (mode === 'INCOME' ? 'active-inc' : '');
+
+  const sel = document.getElementById('txTargetSel');
+  if (mode === 'INCOME') {
+    sel.innerHTML = `<option value="AUTO_50_30_20">⚡ Tự chia 50/30/20 vào các hũ</option>` +
+      state.envelopes.map(e => `<option value="${e.id}">Cộng 100% ➔ ${e.name}</option>`).join('');
+  } else {
+    sel.innerHTML = state.envelopes.map(e => `<option value="${e.id}">${e.name} (${fmtVND(e.balance)})</option>`).join('');
+  }
+}
+
+function pressKey(k) {
+  if (k === 'C') calcExpr = '';
+  else if (k === 'DEL') calcExpr = calcExpr.slice(0, -1);
+  else calcExpr += k;
+  document.getElementById('calcDisplay').textContent = calcExpr || '0';
+}
+
+function evalCalc() {
+  try {
+    return (calcExpr || '0').split('+').map(x => parseFloat(x) || 0).reduce((a, b) => a + b, 0);
+  } catch (e) { return 0; }
+}
+
+function submitModalTx() {
+  const amt = evalCalc();
+  if (amt <= 0) return alert('Vui lòng nhập số tiền lớn hơn 0!');
+  const note = document.getElementById('txNoteInp').value.trim();
+  const target = document.getElementById('txTargetSel').value;
+
+  if (modalMode === 'INCOME') recordIncome(amt, note, target);
+  else recordExpense(amt, note, target);
+  closeModal('txModal');
+}
+
+// ================= 8. RENDER TOÀN BỘ GIAO DIỆN =================
+function renderAll() {
+  const st = getMonthStats();
+  const savingsTotal = state.envelopes.filter(e => e.bucket === 'SAVINGS').reduce((s, e) => s + e.balance, 0);
+
+  document.getElementById('headerSubText').textContent =
+    `Ngày ${st.now.toLocaleDateString('vi-VN')} • Tích lũy: ${fmtVND(savingsTotal)}`;
+
+  // 1. Hero Safe-to-Spend
+  document.getElementById('s2sValue').textContent = fmtVND(st.safeToSpendToday);
+  document.getElementById('s2sSubInfo').textContent =
+    `Hôm nay đã tiêu: ${fmtVND(st.spentToday)} • Còn ${st.remainingDays} ngày trong tháng`;
+  document.getElementById('timePctLabel').textContent = `${st.timePct}%`;
+  document.getElementById('timeBar').style.width = `${st.timePct}%`;
+  document.getElementById('spentPctLabel').textContent = `${st.spentPct}%`;
+  document.getElementById('spentBar').style.width = `${st.spentPct}%`;
+  document.getElementById('flexRemainingLabel').textContent = fmtVND(st.totalFlexRemaining);
+  document.getElementById('pacingRatioLabel').textContent = `Nhịp độ: ${st.pacing.toFixed(2)}x`;
+
+  // 2. Quick Chips
+  document.getElementById('quickChipsContainer').innerHTML = state.envelopes.map(e => `
+    <button class="quick-chip" onclick="recordExpense(${e.quickAmt || 50000}, '${e.name}', '${e.id}')">
+      <span>${e.name}</span>
+      <strong>${Math.round((e.quickAmt || 50000)/1000)}k</strong>
+    </button>
+  `).join('');
+
+  // 3. Buckets
+  document.getElementById('totalInflowLabel').textContent = `Tổng thu đã nhận tháng này: ${fmtVND(st.totalIncomeMonth)}`;
+  const bucketMeta = [
+    { key: 'NEEDS', label: 'Thiết yếu (Needs)', color: 'var(--blue)' },
+    { key: 'WANTS', label: 'Linh hoạt (Wants)', color: 'var(--orange)' },
+    { key: 'SAVINGS', label: 'Tích lũy (Savings)', color: 'var(--green)' }
+  ];
+  document.getElementById('bucketsContainer').innerHTML = bucketMeta.map(b => {
+    const envs = state.envelopes.filter(e => e.bucket === b.key);
+    const bal = envs.reduce((s, e) => s + e.balance, 0);
+    const alloc = envs.reduce((s, e) => s + Math.max(0, e.allocated), 0);
+    const pct = alloc > 0 ? Math.min(100, Math.max(0, Math.round((bal / alloc) * 100))) : 0;
+    return `
+      <div class="bucket-row">
+        <div class="bucket-top">
+          <span style="color:${b.color}">● ${b.label}</span>
+          <span>Còn ${fmtVND(bal)}</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="background:${b.color}; width:${pct}%;"></div></div>
+      </div>
+    `;
+  }).join('');
+
+  // 4. Lịch sử giao dịch gần đây
+  const txBox = document.getElementById('recentTxList');
+  if (state.transactions.length === 0) {
+    txBox.innerHTML = `<div class="card-sub" style="padding:8px 0;">Chưa có giao dịch nào.</div>`;
+  } else {
+    txBox.innerHTML = state.transactions.slice(0, 15).map(t => `
+      <div class="list-item">
+        <div class="item-left">
+          <div class="item-title">${t.note}</div>
+          <div class="item-meta">${new Date(t.date).toLocaleDateString('vi-VN')} • ${t.type === 'INCOME' ? 'Thu nhập' : 'Chi tiêu'}</div>
+        </div>
+        <div class="item-right">
+          <span class="${t.type === 'INCOME' ? 'amt-in' : 'amt-out'}">${t.type === 'INCOME' ? '+' : '-'}${fmtVND(t.amount)}</span>
+          <button class="btn btn-sm btn-red" onclick="deleteTransaction('${t.id}')">Xóa</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // 5. Danh sách các mục chi tiêu (Tab 2 - Chỉnh sửa trực tiếp)
+  const bucketNames = { NEEDS: 'Thiết yếu', WANTS: 'Linh hoạt', SAVINGS: 'Tích lũy' };
+  document.getElementById('envelopesListContainer').innerHTML = state.envelopes.map(e => `
+    <div class="list-item">
+      <div class="item-left" onclick="openEnvelopeModal('${e.id}')" style="cursor:pointer;">
+        <div class="item-title">${e.name}</div>
+        <div class="item-meta">${bucketNames[e.bucket] || e.bucket} • Chạm nhanh: ${Math.round((e.quickAmt||50000)/1000)}k • Dư: ${fmtVND(e.balance)}</div>
+      </div>
+      <div class="item-right">
+        <button class="btn btn-sm btn-ghost" onclick="openEnvelopeModal('${e.id}')">Sửa</button>
+        <button class="btn btn-sm btn-red" onclick="deleteEnvelope('${e.id}')">Xóa</button>
+      </div>
+    </div>
+  `).join('');
+
+  // 6. Tab 3: Tiền nhà riêng, Điện nước riêng & Tiền họ nộp cho tôi
+  document.getElementById('payRmSel').innerHTML = state.roommates.map(r =>
+    `<option value="${r.id}">${r.name}</option>`
+  ).join('');
+
+  document.getElementById('housingEnvSel').innerHTML = state.envelopes.map(e =>
+    `<option value="${e.id}" ${e.id === state.housing.targetEnvId ? 'selected' : ''}>${e.name}</option>`
+  ).join('');
+
+  document.getElementById('myRentInp').value = state.housing.myRent || 0;
+  document.getElementById('elecBillInp').value = state.housing.elecBill || '';
+  document.getElementById('waterBillInp').value = state.housing.waterBill || '';
+
+  // 6A. Render Tiền Nhà Riêng
+  let totalRoommatesRent = 0;
+  let totalRentCollected = 0;
+
+  const rentRowsHtml = state.roommates.map(r => {
+    const mustPay = r.rentShare || 0;
+    const paid = state.housing.payments
+      .filter(p => p.rmId === r.id && p.type === 'RENT')
+      .reduce((s, p) => s + p.amount, 0);
+    const remain = Math.max(0, mustPay - paid);
+    totalRoommatesRent += mustPay;
+    totalRentCollected += paid;
+
+    return `
+      <div class="rm-status-box">
+        <div>
+          <div style="font-size:13.5px; font-weight:600;">👤 ${r.name}: ${fmtVND(mustPay)}</div>
+          <div class="item-meta">Họ đã nộp: <strong style="color:var(--green)">${fmtVND(paid)}</strong> • Còn thiếu: <strong style="color:${remain > 0 ? 'var(--orange)' : 'var(--sub)'}">${fmtVND(remain)}</strong></div>
+        </div>
+        <div>
+          ${remain > 0
+            ? `<button class="btn btn-sm btn-green" onclick="recordRoommatePayment('${r.id}', 'RENT', ${remain})">Nộp đủ</button>`
+            : `<span class="badge-paid">✓ Đã nộp đủ</span>`
+          }
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const grandTotalRent = (state.housing.myRent || 0) + totalRoommatesRent;
+  document.getElementById('rentBreakdownUI').innerHTML = `
+    <div class="card-sub" style="margin-bottom:6px;">
+      Tổng tiền nhà cả phòng: <strong>${fmtVND(grandTotalRent)}</strong> (Họ đã nộp cho bạn: <strong style="color:var(--green)">${fmtVND(totalRentCollected)}</strong> / ${fmtVND(totalRoommatesRent)})
+    </div>
+    ${rentRowsHtml}
+  `;
+
+  // 6B. Render Tiền Điện Nước Riêng
+  const totalUtil = (state.housing.elecBill || 0) + (state.housing.waterBill || 0);
+  const rmWeightSum = state.roommates.reduce((s, r) => s + (r.weight || 0), 0);
+  const myUtilWeight = Math.max(0, 100 - rmWeightSum);
+  const myUtilShare = Math.round((totalUtil * myUtilWeight) / 100);
+
+  let totalUtilRoommates = 0;
+  let totalUtilCollected = 0;
+
+  const utilRowsHtml = state.roommates.map(r => {
+    const mustPay = Math.round((totalUtil * (r.weight || 0)) / 100);
+    const paid = state.housing.payments
+      .filter(p => p.rmId === r.id && p.type === 'UTIL')
+      .reduce((s, p) => s + p.amount, 0);
+    const remain = Math.max(0, mustPay - paid);
+    totalUtilRoommates += mustPay;
+    totalUtilCollected += paid;
+
+    return `
+      <div class="rm-status-box">
+        <div>
+          <div style="font-size:13.5px; font-weight:600;">👤 ${r.name} (${r.weight}%): ${fmtVND(mustPay)}</div>
+          <div class="item-meta">Họ đã nộp: <strong style="color:var(--green)">${fmtVND(paid)}</strong> • Còn thiếu: <strong style="color:${remain > 0 ? 'var(--orange)' : 'var(--sub)'}">${fmtVND(remain)}</strong></div>
+        </div>
+        <div>
+          ${remain > 0
+            ? `<button class="btn btn-sm btn-green" onclick="recordRoommatePayment('${r.id}', 'UTIL', ${remain})">Nộp đủ</button>`
+            : `<span class="badge-paid">✓ Đã nộp đủ</span>`
+          }
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('utilBreakdownUI').innerHTML = `
+    <div class="card-sub" style="margin-bottom:6px;">
+      Tổng Điện + Nước: <strong>${fmtVND(totalUtil)}</strong> • Phần của tôi (${myUtilWeight}%): <strong>${fmtVND(myUtilShare)}</strong>
+    </div>
+    ${utilRowsHtml}
+  `;
+
+  // 6C. Danh sách Người ở cùng
+  document.getElementById('roommatesListUI').innerHTML = state.roommates.map(r => `
+    <div class="list-item">
+      <div class="item-left" onclick="openRoommateModal('${r.id}')" style="cursor:pointer;">
+        <div class="item-title">👤 ${r.name}</div>
+        <div class="item-meta">Tiền nhà: ${fmtVND(r.rentShare)} • Điện nước: ${r.weight}%</div>
+      </div>
+      <div class="item-right">
+        <button class="btn btn-sm btn-ghost" onclick="openRoommateModal('${r.id}')">Sửa</button>
+        <button class="btn btn-sm btn-red" onclick="removeRoommate('${r.id}')">Xóa</button>
+      </div>
+    </div>
+  `).join('');
+
+  // 6D. Lịch sử họ nộp tiền
+  const payBox = document.getElementById('rmPaymentHistoryUI');
+  if (state.housing.payments.length === 0) {
+    payBox.innerHTML = `<div class="card-sub">Chưa có khoản nộp tiền phòng / điện nước nào trong tháng.</div>`;
+  } else {
+    payBox.innerHTML = state.housing.payments.map(p => `
+      <div class="list-item">
+        <div class="item-left">
+          <div class="item-title">${p.rmName} nộp ${p.type === 'RENT' ? '🏠 Tiền nhà' : '⚡💧 Điện nước'}</div>
+          <div class="item-meta">Ngày nộp: ${p.date}</div>
+        </div>
+        <div class="item-right">
+          <span class="amt-in">+${fmtVND(p.amount)}</span>
+          <button class="btn btn-sm btn-red" onclick="deleteRoommatePayment('${p.id}')">Xóa</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // 7. Tab 4: Đối chiếu cuối tháng
+  const totalMustCollect = totalRoommatesRent + totalUtilRoommates;
+  const totalCollectedAll = totalRentCollected + totalUtilCollected;
+  const totalStillUnpaid = Math.max(0, totalMustCollect - totalCollectedAll);
+  const netCashflow = st.totalIncomeMonth - st.totalExpenseMonth;
+
+  document.getElementById('reconcileSummaryBox').innerHTML = `
+    <div class="list-item"><span class="item-title">1. Tổng thu nhập cá nhân đã nhận:</span><span class="amt-in">+${fmtVND(st.totalIncomeMonth)}</span></div>
+    <div class="list-item"><span class="item-title">2. Tổng chi tiêu cá nhân:</span><span class="amt-out">-${fmtVND(st.totalExpenseMonth)}</span></div>
+    <div class="list-item"><span class="item-title">3. Dư / Thâm hụt cá nhân:</span><strong style="color:${netCashflow >= 0 ? 'var(--green)' : 'var(--red)'}">${fmtVND(netCashflow)}</strong></div>
+    <div class="list-item"><span class="item-title">4. Tiền nhà + Điện nước HỌ ĐÃ NỘP:</span><span class="amt-in">${fmtVND(totalCollectedAll)}</span></div>
+    <div class="list-item"><span class="item-title">5. Tiền nhà + Điện nước HỌ CÒN THIẾU:</span><strong style="color:var(--orange)">${fmtVND(totalStillUnpaid)}</strong></div>
+  `;
+}
+
+renderAll();
+</script>
+</body>
+</html>
