@@ -52,7 +52,7 @@
 
     /* HERO SAFE TO SPEND */
     .hero-card { background: linear-gradient(145deg, #172036, #111827); border: 1px solid rgba(59,130,246,0.22); }
-    .s2s-amount { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; margin: 6px 0; }
+    .s2s-amount { font-size: 34px; font-weight: 800; letter-spacing: -0.5px; margin: 6px 0; font-variant-numeric: tabular-nums; }
     .status-badge { font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 600; background: rgba(16,185,129,0.15); color: var(--green); white-space: nowrap; }
     .pacing-box { background: rgba(0,0,0,0.28); border-radius: 14px; padding: 12px; margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
     .bar-track { width: 100%; height: 6px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
@@ -73,8 +73,8 @@
     .item-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .item-meta { font-size: 11.5px; color: var(--sub); }
     .item-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-    .amt-in { color: var(--green); font-weight: 700; font-size: 14px; }
-    .amt-out { color: var(--text); font-weight: 700; font-size: 14px; }
+    .amt-in { color: var(--green); font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; }
+    .amt-out { color: var(--text); font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; }
 
     /* BUTTONS & INPUTS */
     .btn { border: none; padding: 11px 14px; border-radius: 12px; font-size: 13.5px; font-weight: 600; cursor: pointer; color: #fff; background: var(--blue); text-align: center; }
@@ -83,17 +83,16 @@
     .btn-ghost { background: var(--card2); color: var(--text); border: 1px solid var(--border); }
     .btn-green { background: var(--green); color: #052e16; font-weight: 700; }
     .btn-red { background: rgba(239,68,68,0.18); color: var(--red); }
-    .btn-orange { background: rgba(245,158,11,0.18); color: var(--orange); }
 
     label.field-label { display: block; font-size: 11.5px; color: var(--sub); margin-bottom: 4px; font-weight: 600; }
-    input, select { width: 100%; background: var(--card2); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; border-radius: 10px; font-size: 14px; outline: none; }
-    input:focus, select:focus { border-color: var(--blue); }
+    input, select, textarea { width: 100%; background: var(--card2); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; border-radius: 10px; font-size: 14px; outline: none; }
+    input.money-inp { font-variant-numeric: tabular-nums; font-weight: 700; letter-spacing: 0.3px; }
+    input:focus, select:focus, textarea:focus { border-color: var(--blue); }
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
 
     /* ROOMMATE STATUS BADGES */
     .rm-status-box { display: flex; justify-content: space-between; align-items: center; background: var(--card2); padding: 10px 12px; border-radius: 10px; margin-top: 6px; gap: 8px; }
     .badge-paid { background: rgba(16,185,129,0.2); color: var(--green); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
-    .badge-unpaid { background: rgba(245,158,11,0.2); color: var(--orange); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
 
     /* BOTTOM NAV BAR */
     .bottom-nav {
@@ -110,9 +109,9 @@
     .nav-plus { width: 52px; height: 52px; border-radius: 26px; background: var(--blue); color: #fff; border: none; font-size: 28px; display: flex; align-items: center; justify-content: center; margin: -18px auto 0; box-shadow: 0 6px 20px rgba(59,130,246,0.45); cursor: pointer; }
 
     /* MODALS */
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 100; display: none; align-items: flex-end; }
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; display: none; align-items: flex-end; }
     .modal-backdrop.open { display: flex; }
-    .modal-sheet { width: 100%; background: var(--card); border-radius: 24px 24px 0 0; padding: 16px 16px calc(env(safe-area-inset-bottom, 20px) + 14px); border-top: 1px solid var(--border); max-height: 90dvh; overflow-y: auto; }
+    .modal-sheet { width: 100%; background: var(--card); border-radius: 24px 24px 0 0; padding: 16px 16px calc(env(safe-area-inset-bottom, 20px) + 14px); border-top: 1px solid var(--border); max-height: 92dvh; overflow-y: auto; }
     .type-toggle { display: flex; background: var(--bg); padding: 4px; border-radius: 12px; margin-bottom: 12px; }
     .type-btn { flex: 1; padding: 9px; border: none; background: transparent; color: var(--sub); font-weight: 700; font-size: 13.5px; border-radius: 9px; cursor: pointer; }
     .type-btn.active-exp { background: var(--red); color: #fff; }
@@ -122,16 +121,26 @@
     .numpad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; }
     .num-key { background: var(--card2); border: none; color: var(--text); padding: 13px 0; border-radius: 10px; font-size: 17px; font-weight: 700; cursor: pointer; }
     .num-key:active { background: var(--blue); }
+
+    /* TOAST THÔNG BÁO NHANH */
+    .toast-bar {
+      position: fixed; top: calc(env(safe-area-inset-top, 14px) + 56px); left: 50%; transform: translateX(-50%);
+      background: #10b981; color: #052e16; font-weight: 700; font-size: 13px;
+      padding: 8px 16px; border-radius: 20px; z-index: 200; display: none;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4); white-space: nowrap;
+    }
   </style>
 </head>
 <body>
+
+  <div class="toast-bar" id="toastBar">Đã lưu</div>
 
   <!-- HEADER -->
   <div class="app-header">
     <div class="brand-row">
       <div class="logo-badge">đ</div>
       <div>
-        <div class="app-title">Chi Tiêu Hybrid <span class="offline-pill">Offline</span></div>
+        <div class="app-title">Chi Tiêu Hybrid <span class="offline-pill" id="storageStatusBadge">Offline • Khóa cứng</span></div>
         <div class="app-sub" id="headerSubText">Đang tải...</div>
       </div>
     </div>
@@ -173,7 +182,7 @@
         </div>
       </div>
 
-      <!-- GHI NHANH 1 CHẠM (CÓ NÚT SỬA TRỰC TIẾP CÁC MỤC) -->
+      <!-- GHI NHANH 1 CHẠM -->
       <div class="card">
         <div class="card-header">
           <span class="card-title">⚡ CHẠM 1 LẦN GHI NHANH</span>
@@ -182,7 +191,7 @@
         <div class="chips-scroll" id="quickChipsContainer"></div>
       </div>
 
-      <!-- CẤU TRÚC HYBRID & THU NHẬP THỰC TẾ -->
+      <!-- QUỸ HIỆN TẠI & THU NHẬP -->
       <div class="card">
         <div class="card-header">
           <div>
@@ -203,29 +212,29 @@
       </div>
     </div>
 
-    <!-- ================= TAB 2: PHONG BÌ (TỰ CHỈNH SỬA MỌI NỘI DUNG) ================= -->
+    <!-- ================= TAB 2: CÁC MỤC CHI TIÊU ================= -->
     <div class="tab-page" id="page-envelopes">
       <div class="card">
         <div class="card-header">
           <div>
             <div class="card-title">Danh mục Chi tiêu (Phong bì)</div>
-            <div class="card-sub">Bấm nút "Sửa" ở bất kỳ mục nào để đổi tên, mức tiền nhanh hoặc số dư</div>
+            <div class="card-sub">Bấm "Sửa" để đổi tên, số tiền chạm nhanh hoặc số dư</div>
           </div>
-          <button class="btn btn-sm" onclick="openEnvelopeModal(null)">+ Thêm mục mới</button>
+          <button class="btn btn-sm" onclick="openEnvelopeModal(null)">+ Thêm mục</button>
         </div>
         <div id="envelopesListContainer"></div>
       </div>
     </div>
 
-    <!-- ================= TAB 3: TIỀN PHÒNG (TIỀN NHÀ RIÊNG & ĐIỆN NƯỚC RIÊNG) ================= -->
+    <!-- ================= TAB 3: TIỀN PHÒNG & ĐIỆN NƯỚC RIÊNG ================= -->
     <div class="tab-page" id="page-roommates">
 
-      <!-- 1. MỤC NHẬP TIỀN HỌ NỘP CHO TÔI -->
+      <!-- 1. NHẬP TIỀN HỌ NỘP CHO TÔI -->
       <div class="card" style="border-color: rgba(16,185,129,0.35);">
         <div class="card-header">
           <div>
             <div class="card-title" style="color:var(--green);">💸 Nhập Tiền Họ Nộp Cho Tôi</div>
-            <div class="card-sub">Ghi nhận khi người ở cùng đưa tiền hoặc chuyển khoản cho bạn</div>
+            <div class="card-sub">Ghi nhận khi người ở cùng đưa tiền hoặc chuyển khoản</div>
           </div>
         </div>
         <div class="form-grid">
@@ -241,10 +250,10 @@
             </select>
           </div>
         </div>
-        <div class="form-grid" style="grid-template-columns: 1.3fr 1fr;">
+        <div class="form-grid" style="grid-template-columns: 1.35fr 1fr;">
           <div>
             <label class="field-label">Số tiền họ nộp (đ)</label>
-            <input type="number" id="payAmountInp" placeholder="VD: 1500000">
+            <input type="text" inputmode="numeric" class="money-inp" id="payAmountInp" placeholder="1,500,000">
           </div>
           <div style="display:flex; align-items:flex-end;">
             <button class="btn btn-green" style="width:100%;" onclick="recordRoommatePayment()">+ Lưu đã nộp</button>
@@ -257,14 +266,14 @@
         <div class="card-header">
           <div>
             <div class="card-title">🏠 Tiền Nhà Riêng</div>
-            <div class="card-sub">Quản lý mức tiền nhà mỗi người và phần tiền nhà của riêng bạn</div>
+            <div class="card-sub">Theo dõi riêng tiền nhà của bạn và của từng người</div>
           </div>
-          <button class="btn btn-sm btn-ghost" onclick="deductMyRentToEnvelope()">Trừ phần tôi vào Phong bì</button>
+          <button class="btn btn-sm btn-ghost" onclick="deductMyRentToEnvelope()">Trừ phần tôi</button>
         </div>
         <div class="form-grid">
           <div>
             <label class="field-label">Tiền nhà của riêng tôi (đ)</label>
-            <input type="number" id="myRentInp" placeholder="VD: 1500000" onchange="saveRentSettings()">
+            <input type="text" inputmode="numeric" class="money-inp" id="myRentInp" placeholder="1,500,000" onchange="saveRentSettings()">
           </div>
           <div>
             <label class="field-label">Trừ vào mục chi tiêu</label>
@@ -279,36 +288,36 @@
         <div class="card-header">
           <div>
             <div class="card-title">⚡💧 Tiền Điện Nước Riêng</div>
-            <div class="card-sub">Tự động tách theo % điện nước của từng người và phần của bạn</div>
+            <div class="card-sub">Tự động chia theo % của từng người và phần của bạn</div>
           </div>
-          <button class="btn btn-sm btn-ghost" onclick="deductMyUtilToEnvelope()">Trừ phần tôi vào Phong bì</button>
+          <button class="btn btn-sm btn-ghost" onclick="deductMyUtilToEnvelope()">Trừ phần tôi</button>
         </div>
         <div class="form-grid">
           <div>
             <label class="field-label">Tiền Điện tháng này (đ)</label>
-            <input type="number" id="elecBillInp" placeholder="VD: 900000" oninput="saveUtilSettings()">
+            <input type="text" inputmode="numeric" class="money-inp" id="elecBillInp" placeholder="900,000" onchange="saveUtilSettings()">
           </div>
           <div>
             <label class="field-label">Tiền Nước / Phụ phí (đ)</label>
-            <input type="number" id="waterBillInp" placeholder="VD: 150000" oninput="saveUtilSettings()">
+            <input type="text" inputmode="numeric" class="money-inp" id="waterBillInp" placeholder="150,000" onchange="saveUtilSettings()">
           </div>
         </div>
         <div id="utilBreakdownUI"></div>
       </div>
 
-      <!-- 4. DANH SÁCH NGƯỜI Ở CÙNG (THÊM / SỬA / XÓA) -->
+      <!-- 4. DANH SÁCH NGƯỜI Ở CÙNG -->
       <div class="card">
         <div class="card-header">
           <div>
             <div class="card-title">👥 Người ở cùng (Thêm / Sửa / Xóa)</div>
-            <div class="card-sub">Chỉnh tên, tiền nhà cố định và % chia điện nước của từng người</div>
+            <div class="card-sub">Chỉnh tên, mức tiền nhà và % chia điện nước</div>
           </div>
           <button class="btn btn-sm" onclick="openRoommateModal(null)">+ Thêm người</button>
         </div>
         <div id="roommatesListUI"></div>
       </div>
 
-      <!-- 5. LỊCH SỬ CÁC LẦN HỌ NỘP TIỀN TRONG THÁNG -->
+      <!-- 5. LỊCH SỬ HỌ NỘP TIỀN -->
       <div class="card">
         <div class="card-header">
           <span class="card-title">Lịch sử họ nộp tiền tháng này</span>
@@ -319,7 +328,7 @@
 
     </div>
 
-    <!-- ================= TAB 4: ĐỐI CHIẾU CUỐI THÁNG & SAO LƯU ================= -->
+    <!-- ================= TAB 4: ĐỐI CHIẾU & BẢO VỆ DỮ LIỆU ================= -->
     <div class="tab-page" id="page-reconcile">
       <div class="card">
         <div class="card-header">
@@ -332,18 +341,20 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" style="border-color: rgba(59,130,246,0.35);">
         <div class="card-header">
           <div>
-            <div class="card-title">🛡️ Sao Lưu & Khởi Tạo Dữ Liệu</div>
-            <div class="card-sub">Dữ liệu lưu trên iPhone của bạn, không mất khi cập nhật GitHub</div>
+            <div class="card-title">🛡️ Sao Lưu & Khôi Phục Tuyệt Đối</div>
+            <div class="card-sub">Chống mất dữ liệu trên iOS: Copy mã dán vào Ghi chú (Notes) chỉ mất 1 giây</div>
           </div>
         </div>
         <div style="display:flex; flex-direction:column; gap:8px;">
-          <button class="btn btn-ghost" onclick="exportBackupJson()">⬇️ Tải file sao lưu (.json)</button>
-          <input type="file" id="importFileInp" accept=".json" style="display:none;" onchange="importBackupJson(event)">
-          <button class="btn btn-ghost" onclick="document.getElementById('importFileInp').click()">⬆️ Khôi phục từ file sao lưu</button>
-          <button class="btn btn-red" onclick="resetToZeroClean()">🗑️ Đặt lại số dư & giao dịch về 0đ</button>
+          <button class="btn" onclick="copyBackupCode()">📋 Copy mã sao lưu (Dán vào Ghi chú iPhone)</button>
+          <button class="btn btn-ghost" onclick="openRestoreModal()">📥 Dán mã sao lưu để khôi phục dữ liệu</button>
+          <div class="form-grid" style="margin-top:4px; margin-bottom:0;">
+            <button class="btn btn-ghost" onclick="exportBackupJson()">⬇️ Tải file .json</button>
+            <button class="btn btn-red" onclick="resetToZeroClean()">🗑️ Đặt lại về 0đ</button>
+          </div>
         </div>
       </div>
     </div>
@@ -399,7 +410,7 @@
     </div>
   </div>
 
-  <!-- ================= MODAL 2: SỬA / THÊM MỤC CHI TIÊU (PHONG BÌ) ================= -->
+  <!-- ================= MODAL 2: SỬA / THÊM MỤC CHI TIÊU ================= -->
   <div class="modal-backdrop" id="envModal">
     <div class="modal-sheet">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
@@ -423,17 +434,17 @@
           </div>
           <div>
             <label class="field-label">Số tiền chạm nhanh (đ)</label>
-            <input type="number" id="editEnvQuick" placeholder="VD: 45000">
+            <input type="text" inputmode="numeric" class="money-inp" id="editEnvQuick" placeholder="45,000">
           </div>
         </div>
         <div class="form-grid">
           <div>
             <label class="field-label">Số dư hiện tại (đ)</label>
-            <input type="number" id="editEnvBalance" placeholder="VD: 2000000">
+            <input type="text" inputmode="numeric" class="money-inp" id="editEnvBalance" placeholder="2,000,000">
           </div>
           <div>
             <label class="field-label">Hạn mức phân bổ (đ)</label>
-            <input type="number" id="editEnvAllocated" placeholder="VD: 2000000">
+            <input type="text" inputmode="numeric" class="money-inp" id="editEnvAllocated" placeholder="2,000,000">
           </div>
         </div>
         <button class="btn" style="width:100%; margin-top:4px;" onclick="saveEnvelopeModal()">Lưu thay đổi</button>
@@ -457,11 +468,11 @@
         <div class="form-grid">
           <div>
             <label class="field-label">Tiền nhà mỗi tháng (đ)</label>
-            <input type="number" id="editRmRent" placeholder="VD: 1500000">
+            <input type="text" inputmode="numeric" class="money-inp" id="editRmRent" placeholder="1,500,000">
           </div>
           <div>
             <label class="field-label">% Chia điện nước</label>
-            <input type="number" id="editRmWeight" placeholder="VD: 35">
+            <input type="text" inputmode="numeric" id="editRmWeight" placeholder="35">
           </div>
         </div>
         <button class="btn" style="width:100%; margin-top:4px;" onclick="saveRoommateModal()">Lưu người ở cùng</button>
@@ -469,9 +480,56 @@
     </div>
   </div>
 
+  <!-- ================= MODAL 4: KHÔI PHỤC TỪ MÃ SAO LƯU ================= -->
+  <div class="modal-backdrop" id="restoreModal">
+    <div class="modal-sheet">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <span style="font-weight:700; font-size:16px;">Khôi phục từ mã sao lưu</span>
+        <button class="btn btn-sm btn-ghost" onclick="closeModal('restoreModal')">Đóng ✕</button>
+      </div>
+      <label class="field-label">Dán đoạn mã sao lưu bạn đã lưu trong Ghi chú vào đây:</label>
+      <textarea id="restoreCodeArea" rows="5" placeholder='{"weights":...}' style="margin-bottom:10px; font-size:12px;"></textarea>
+      <button class="btn btn-green" style="width:100%;" onclick="applyRestoreCode()">Khôi phục dữ liệu ngay</button>
+    </div>
+  </div>
+
 <script>
-// ================= 1. KHỞI TẠO & ĐỒNG BỘ DỮ LIỆU CŨ =================
+// ================= 1. BỘ ĐỊNH DẠNG Ô NHẬP TIỀN (BÀN PHÍM SỐ + DẤU PHẨY TỰ ĐỘNG) =================
+function parseMoney(str) {
+  if (typeof str === 'number') return str;
+  const digits = String(str || '').replace(/[^\d]/g, '');
+  return digits ? parseInt(digits, 10) : 0;
+}
+
+function formatWithCommas(num) {
+  const n = parseMoney(num);
+  return n > 0 ? n.toLocaleString('en-US') : '';
+}
+
+function attachMoneyFormatters() {
+  document.querySelectorAll('input.money-inp').forEach(inp => {
+    if (inp.dataset.bound) return;
+    inp.dataset.bound = '1';
+    inp.addEventListener('input', () => {
+      const raw = inp.value.replace(/[^\d]/g, '');
+      inp.value = raw ? parseInt(raw, 10).toLocaleString('en-US') : '';
+    });
+  });
+}
+
+function showToast(msg) {
+  const el = document.getElementById('toastBar');
+  el.textContent = msg;
+  el.style.display = 'block';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => { el.style.display = 'none'; }, 2200);
+}
+
+// ================= 2. LƯU TRỮ KÉP CHỐNG MẤT DỮ LIỆU (INDEXEDDB + LOCALSTORAGE + PERSIST) =================
 const STORAGE_KEY = 'chi_tieu_hybrid_pro_v2';
+const IDB_NAME = 'ChiTieuHybridSafeDB';
+const IDB_STORE = 'app_state';
+
 let isPrivate = false;
 let modalMode = 'EXPENSE';
 let calcExpr = '';
@@ -495,43 +553,135 @@ const defaultState = {
     targetEnvId: 'env_house',
     elecBill: 0,
     waterBill: 0,
-    payments: [] // { id, rmId, rmName, type: 'RENT'|'UTIL', amount, date }
+    payments: []
   },
   transactions: []
 };
 
-let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-if (!state) {
-  state = defaultState;
-} else {
-  // Đảm bảo tương thích ngược với dữ liệu cũ của bạn
-  if (!state.housing) {
-    state.housing = {
+function normalizeState(raw) {
+  if (!raw || typeof raw !== 'object') return JSON.parse(JSON.stringify(defaultState));
+  if (!Array.isArray(raw.envelopes) || raw.envelopes.length === 0) {
+    raw.envelopes = JSON.parse(JSON.stringify(defaultState.envelopes));
+  }
+  if (!raw.weights) raw.weights = { NEEDS: 0.50, WANTS: 0.30, SAVINGS: 0.20 };
+  if (!Array.isArray(raw.transactions)) raw.transactions = [];
+  if (!raw.housing) {
+    raw.housing = {
       myRent: 1500000,
-      targetEnvId: (state.envelopes && state.envelopes[0]) ? state.envelopes[0].id : 'env_house',
+      targetEnvId: raw.envelopes[0].id,
       elecBill: 0,
       waterBill: 0,
       payments: []
     };
   }
-  if (Array.isArray(state.roommates)) {
-    state.roommates.forEach(r => {
+  if (!Array.isArray(raw.housing.payments)) raw.housing.payments = [];
+  if (Array.isArray(raw.roommates)) {
+    raw.roommates.forEach(r => {
       if (typeof r.rentShare !== 'number') r.rentShare = 1500000;
       if (typeof r.weight !== 'number') r.weight = 35;
     });
   } else {
-    state.roommates = defaultState.roommates;
+    raw.roommates = JSON.parse(JSON.stringify(defaultState.roommates));
   }
+  return raw;
 }
 
-function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+// IndexedDB Mirror Backup
+function openSafeIDB() {
+  return new Promise((resolve, reject) => {
+    if (!window.indexedDB) return reject();
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(IDB_STORE)) db.createObjectStore(IDB_STORE);
+    };
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror = () => reject();
+  });
+}
+
+async function writeToIDB(dataObj) {
+  try {
+    const db = await openSafeIDB();
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    tx.objectStore(IDB_STORE).put(JSON.stringify(dataObj), STORAGE_KEY);
+  } catch (e) {}
+}
+
+async function readFromIDB() {
+  try {
+    const db = await openSafeIDB();
+    return new Promise(resolve => {
+      const tx = db.transaction(IDB_STORE, 'readonly');
+      const req = tx.objectStore(IDB_STORE).get(STORAGE_KEY);
+      req.onsuccess = () => resolve(req.result ? JSON.parse(req.result) : null);
+      req.onerror = () => resolve(null);
+    });
+  } catch (e) { return null; }
+}
+
+// Khởi tạo dữ liệu an toàn
+let localRaw = null;
+try { localRaw = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch (e) {}
+let state = normalizeState(localRaw);
+
+// Yêu cầu iOS khóa cứng bộ nhớ không tự dọn dẹp
+if (navigator.storage && navigator.storage.persist) {
+  navigator.storage.persist().then(granted => {
+    if (granted) document.getElementById('storageStatusBadge').textContent = 'Offline • Đã khóa bộ nhớ';
+  }).catch(() => {});
+}
+
+// Nếu localStorage bị Safari xóa nhưng IndexedDB vẫn còn -> Tự động cứu lại dữ liệu
+(async function recoverIfNeeded() {
+  if (!localRaw) {
+    const idbData = await readFromIDB();
+    if (idbData && Array.isArray(idbData.envelopes)) {
+      state = normalizeState(idbData);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      renderAll();
+      showToast('Đã tự động khôi phục dữ liệu dự phòng!');
+    }
+  } else {
+    writeToIDB(state);
+  }
+})();
+
+// Đăng ký Service Worker nội tuyến chống màn hình đen khi mất sóng
+(function registerInlineSW() {
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    const swCode = `
+      const CACHE = 'hybrid-v3';
+      self.addEventListener('install', e => {
+        self.skipWaiting();
+        e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./', 'index.html']).catch(() => {})));
+      });
+      self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+      self.addEventListener('fetch', e => {
+        e.respondWith(
+          fetch(e.request).then(res => {
+            const copy = res.clone();
+            caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
+            return res;
+          }).catch(() => caches.match(e.request).then(r => r || caches.match('./')))
+        );
+      });
+    `;
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+  }
+})();
+
+function saveState(msg) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  writeToIDB(state);
   renderAll();
+  if (msg) showToast(msg);
 }
 
 function fmtVND(n) {
   if (isPrivate) return '•••••• ₫';
-  return Math.round(n || 0).toLocaleString('vi-VN') + ' ₫';
+  return Math.round(n || 0).toLocaleString('en-US') + ' ₫';
 }
 
 function togglePrivacy() {
@@ -543,7 +693,7 @@ function closeModal(id) {
   document.getElementById(id).classList.remove('open');
 }
 
-// ================= 2. LOGIC TOÁN HỌC HYBRID & SAFE-TO-SPEND =================
+// ================= 3. LOGIC TOÁN HỌC HYBRID & SAFE-TO-SPEND =================
 function getMonthStats() {
   const now = new Date();
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
@@ -581,7 +731,7 @@ function getMonthStats() {
   };
 }
 
-// ================= 3. GHI THU NHẬP & CHI TIÊU =================
+// ================= 4. GHI THU NHẬP & CHI TIÊU =================
 function recordIncome(amount, note, targetMode) {
   if (amount <= 0) return;
   if (targetMode === 'AUTO_50_30_20') {
@@ -612,7 +762,7 @@ function recordIncome(amount, note, targetMode) {
     target: targetMode,
     date: new Date().toISOString()
   });
-  saveState();
+  saveState('Đã cộng khoản thu!');
 }
 
 function recordExpense(amount, note, envId) {
@@ -628,7 +778,7 @@ function recordExpense(amount, note, envId) {
     envId: env ? env.id : '',
     date: new Date().toISOString()
   });
-  saveState();
+  saveState(`Đã ghi -${fmtVND(amount)}`);
 }
 
 function deleteTransaction(txId) {
@@ -661,10 +811,10 @@ function deleteTransaction(txId) {
     }
   }
   state.transactions.splice(idx, 1);
-  saveState();
+  saveState('Đã xóa & hoàn số dư');
 }
 
-// ================= 4. CHỈNH SỬA TRỰC TIẾP CÁC MỤC CHI TIÊU (MODAL) =================
+// ================= 5. CHỈNH SỬA TRỰC TIẾP CÁC MỤC CHI TIÊU =================
 function openEnvelopeModal(envId) {
   const env = state.envelopes.find(e => e.id === envId);
   if (env) {
@@ -672,17 +822,17 @@ function openEnvelopeModal(envId) {
     document.getElementById('editEnvId').value = env.id;
     document.getElementById('editEnvName').value = env.name;
     document.getElementById('editEnvBucket').value = env.bucket;
-    document.getElementById('editEnvQuick').value = env.quickAmt || 50000;
-    document.getElementById('editEnvBalance').value = Math.round(env.balance);
-    document.getElementById('editEnvAllocated').value = Math.round(env.allocated);
+    document.getElementById('editEnvQuick').value = formatWithCommas(env.quickAmt || 50000);
+    document.getElementById('editEnvBalance').value = formatWithCommas(Math.round(env.balance));
+    document.getElementById('editEnvAllocated').value = formatWithCommas(Math.round(env.allocated));
   } else {
     document.getElementById('envModalTitle').textContent = 'Thêm mục chi tiêu mới';
     document.getElementById('editEnvId').value = '';
     document.getElementById('editEnvName').value = '';
     document.getElementById('editEnvBucket').value = 'WANTS';
-    document.getElementById('editEnvQuick').value = 50000;
-    document.getElementById('editEnvBalance').value = 0;
-    document.getElementById('editEnvAllocated').value = 0;
+    document.getElementById('editEnvQuick').value = '50,000';
+    document.getElementById('editEnvBalance').value = '';
+    document.getElementById('editEnvAllocated').value = '';
   }
   document.getElementById('envModal').classList.add('open');
 }
@@ -691,9 +841,9 @@ function saveEnvelopeModal() {
   const id = document.getElementById('editEnvId').value;
   const name = document.getElementById('editEnvName').value.trim();
   const bucket = document.getElementById('editEnvBucket').value;
-  const quickAmt = parseFloat(document.getElementById('editEnvQuick').value) || 50000;
-  const balance = parseFloat(document.getElementById('editEnvBalance').value) || 0;
-  const allocated = parseFloat(document.getElementById('editEnvAllocated').value) || Math.max(0, balance);
+  const quickAmt = parseMoney(document.getElementById('editEnvQuick').value) || 50000;
+  const balance = parseMoney(document.getElementById('editEnvBalance').value);
+  const allocated = parseMoney(document.getElementById('editEnvAllocated').value) || Math.max(0, balance);
 
   if (!name) return alert('Vui lòng nhập tên mục!');
 
@@ -718,29 +868,29 @@ function saveEnvelopeModal() {
   }
 
   closeModal('envModal');
-  saveState();
+  saveState('Đã lưu mục chi tiêu');
 }
 
 function deleteEnvelope(envId) {
   if (state.envelopes.length <= 1) return alert('Cần giữ lại ít nhất 1 mục chi tiêu.');
   state.envelopes = state.envelopes.filter(e => e.id !== envId);
-  saveState();
+  saveState('Đã xóa mục');
 }
 
-// ================= 5. TIỀN NHÀ RIÊNG, ĐIỆN NƯỚC RIÊNG & TIỀN HỌ NỘP CHO TÔI =================
+// ================= 6. TIỀN NHÀ RIÊNG, ĐIỆN NƯỚC RIÊNG & TIỀN HỌ NỘP =================
 function openRoommateModal(rmId) {
   const rm = state.roommates.find(r => r.id === rmId);
   if (rm) {
     document.getElementById('rmModalTitle').textContent = 'Sửa thông tin người ở cùng';
     document.getElementById('editRmId').value = rm.id;
     document.getElementById('editRmName').value = rm.name;
-    document.getElementById('editRmRent').value = rm.rentShare || 0;
+    document.getElementById('editRmRent').value = formatWithCommas(rm.rentShare || 0);
     document.getElementById('editRmWeight').value = rm.weight || 30;
   } else {
     document.getElementById('rmModalTitle').textContent = 'Thêm người ở cùng';
     document.getElementById('editRmId').value = '';
     document.getElementById('editRmName').value = '';
-    document.getElementById('editRmRent').value = 1500000;
+    document.getElementById('editRmRent').value = '1,500,000';
     document.getElementById('editRmWeight').value = 30;
   }
   document.getElementById('rmModal').classList.add('open');
@@ -749,7 +899,7 @@ function openRoommateModal(rmId) {
 function saveRoommateModal() {
   const id = document.getElementById('editRmId').value;
   const name = document.getElementById('editRmName').value.trim();
-  const rentShare = parseFloat(document.getElementById('editRmRent').value) || 0;
+  const rentShare = parseMoney(document.getElementById('editRmRent').value);
   const weight = parseFloat(document.getElementById('editRmWeight').value) || 0;
 
   if (!name) return alert('Vui lòng nhập tên người ở cùng!');
@@ -765,31 +915,30 @@ function saveRoommateModal() {
     state.roommates.push({ id: 'rm_' + Date.now(), name, rentShare, weight });
   }
   closeModal('rmModal');
-  saveState();
+  saveState('Đã lưu thông tin');
 }
 
 function removeRoommate(rmId) {
   state.roommates = state.roommates.filter(r => r.id !== rmId);
-  saveState();
+  saveState('Đã xóa người ở cùng');
 }
 
 function saveRentSettings() {
-  state.housing.myRent = parseFloat(document.getElementById('myRentInp').value) || 0;
+  state.housing.myRent = parseMoney(document.getElementById('myRentInp').value);
   state.housing.targetEnvId = document.getElementById('housingEnvSel').value;
   saveState();
 }
 
 function saveUtilSettings() {
-  state.housing.elecBill = parseFloat(document.getElementById('elecBillInp').value) || 0;
-  state.housing.waterBill = parseFloat(document.getElementById('waterBillInp').value) || 0;
+  state.housing.elecBill = parseMoney(document.getElementById('elecBillInp').value);
+  state.housing.waterBill = parseMoney(document.getElementById('waterBillInp').value);
   saveState();
 }
 
-// Ghi nhận khi họ nộp tiền cho tôi
 function recordRoommatePayment(customRmId, customType, customAmt) {
   const rmId = customRmId || document.getElementById('payRmSel').value;
   const type = customType || document.getElementById('payTypeSel').value;
-  const amt = customAmt !== undefined ? customAmt : (parseFloat(document.getElementById('payAmountInp').value) || 0);
+  const amt = customAmt !== undefined ? customAmt : parseMoney(document.getElementById('payAmountInp').value);
 
   const rm = state.roommates.find(r => r.id === rmId);
   if (!rm || amt <= 0) return alert('Vui lòng nhập số tiền họ nộp!');
@@ -798,23 +947,23 @@ function recordRoommatePayment(customRmId, customType, customAmt) {
     id: 'pay_' + Date.now(),
     rmId: rm.id,
     rmName: rm.name,
-    type, // 'RENT' hoặc 'UTIL'
+    type,
     amount: amt,
     date: new Date().toLocaleDateString('vi-VN')
   });
 
-  if (!customAmt) document.getElementById('payAmountInp').value = '';
-  saveState();
+  if (customAmt === undefined) document.getElementById('payAmountInp').value = '';
+  saveState(`Đã ghi ${rm.name} nộp +${fmtVND(amt)}`);
 }
 
 function deleteRoommatePayment(payId) {
   state.housing.payments = state.housing.payments.filter(p => p.id !== payId);
-  saveState();
+  saveState('Đã xóa khoản nộp');
 }
 
 function clearHousingPaymentsMonth() {
   state.housing.payments = [];
-  saveState();
+  saveState('Đã làm mới lịch sử nộp tiền');
 }
 
 function deductMyRentToEnvelope() {
@@ -832,7 +981,7 @@ function deductMyUtilToEnvelope() {
   recordExpense(myUtilAmt, `⚡💧 Điện nước phần của tôi (${myWeight}%)`, state.housing.targetEnvId);
 }
 
-// ================= 6. ĐỐI CHIẾU CUỐI THÁNG & SAO LƯU =================
+// ================= 7. ĐỐI CHIẾU & SAO LƯU / KHÔI PHỤC =================
 function rolloverMonth() {
   let swept = 0;
   state.envelopes.forEach(e => {
@@ -851,7 +1000,7 @@ function rolloverMonth() {
   }
   state.transactions = [];
   state.housing.payments = [];
-  saveState();
+  saveState('Đã kết sổ sang tháng mới!');
 }
 
 function shareRoommateReport() {
@@ -867,8 +1016,8 @@ function shareRoommateReport() {
     const dueUtil = Math.max(0, utilShare - paidUtil);
 
     lines.push(`\n👤 ${r.name}:`);
-    lines.push(`  • Tiền nhà: Phải đóng ${fmtVND(r.rentShare)} | Đã nộp: ${fmtVND(paidRent)} | Còn thiếu: ${fmtVND(dueRent)}`);
-    lines.push(`  • Điện nước (${r.weight}%): Phải đóng ${fmtVND(utilShare)} | Đã nộp: ${fmtVND(paidUtil)} | Còn thiếu: ${fmtVND(dueUtil)}`);
+    lines.push(`  • Tiền nhà: ${fmtVND(r.rentShare)} | Đã nộp: ${fmtVND(paidRent)} | Còn thiếu: ${fmtVND(dueRent)}`);
+    lines.push(`  • Điện nước (${r.weight}%): ${fmtVND(utilShare)} | Đã nộp: ${fmtVND(paidUtil)} | Còn thiếu: ${fmtVND(dueUtil)}`);
   });
 
   const text = lines.join('\n');
@@ -876,7 +1025,40 @@ function shareRoommateReport() {
     navigator.share({ title: 'Đối chiếu tiền phòng', text }).catch(() => {});
   } else {
     navigator.clipboard.writeText(text);
-    alert('Đã sao chép bảng kê vào bộ nhớ tạm!');
+    showToast('Đã copy bảng đối chiếu!');
+  }
+}
+
+function copyBackupCode() {
+  const code = JSON.stringify(state);
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(code).then(() => {
+      showToast('Đã copy mã sao lưu! Hãy dán vào Ghi chú iPhone');
+    }).catch(() => {
+      openRestoreModal();
+      document.getElementById('restoreCodeArea').value = code;
+    });
+  } else {
+    openRestoreModal();
+    document.getElementById('restoreCodeArea').value = code;
+  }
+}
+
+function openRestoreModal() {
+  document.getElementById('restoreCodeArea').value = '';
+  document.getElementById('restoreModal').classList.add('open');
+}
+
+function applyRestoreCode() {
+  const rawText = document.getElementById('restoreCodeArea').value.trim();
+  if (!rawText) return alert('Vui lòng dán mã sao lưu vào ô trống!');
+  try {
+    const parsed = JSON.parse(rawText);
+    state = normalizeState(parsed);
+    closeModal('restoreModal');
+    saveState('Khôi phục dữ liệu thành công!');
+  } catch (e) {
+    alert('Mã sao lưu không hợp lệ, vui lòng kiểm tra lại!');
   }
 }
 
@@ -888,32 +1070,16 @@ function exportBackupJson() {
   a.click();
 }
 
-function importBackupJson(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    try {
-      const parsed = JSON.parse(ev.target.result);
-      if (parsed && Array.isArray(parsed.envelopes)) {
-        state = parsed;
-        saveState();
-      }
-    } catch (err) { alert('File sao lưu không hợp lệ!'); }
-  };
-  reader.readAsText(file);
-}
-
 function resetToZeroClean() {
   state.envelopes.forEach(e => { e.allocated = 0; e.balance = 0; });
   state.transactions = [];
   state.housing.payments = [];
   state.housing.elecBill = 0;
   state.housing.waterBill = 0;
-  saveState();
+  saveState('Đã đặt số dư về 0 ₫');
 }
 
-// ================= 7. BÀN PHÍM MODAL & ĐIỀU HƯỚNG =================
+// ================= 8. BÀN PHÍM MODAL & ĐIỀU HƯỚNG =================
 function switchTab(tab, el) {
   document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
   document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
@@ -943,16 +1109,28 @@ function setModalType(mode) {
   }
 }
 
+function formatCalcExpr(expr) {
+  if (!expr) return '0';
+  return expr.split('+').map(part => {
+    const clean = part.replace(/[^\d]/g, '');
+    return clean ? parseInt(clean, 10).toLocaleString('en-US') : '';
+  }).join(' + ');
+}
+
 function pressKey(k) {
   if (k === 'C') calcExpr = '';
   else if (k === 'DEL') calcExpr = calcExpr.slice(0, -1);
-  else calcExpr += k;
-  document.getElementById('calcDisplay').textContent = calcExpr || '0';
+  else if (k === '+') {
+    if (calcExpr && !calcExpr.endsWith('+')) calcExpr += '+';
+  } else {
+    calcExpr += k;
+  }
+  document.getElementById('calcDisplay').textContent = formatCalcExpr(calcExpr) || '0';
 }
 
 function evalCalc() {
   try {
-    return (calcExpr || '0').split('+').map(x => parseFloat(x) || 0).reduce((a, b) => a + b, 0);
+    return (calcExpr || '0').split('+').map(x => parseInt(x.replace(/[^\d]/g, ''), 10) || 0).reduce((a, b) => a + b, 0);
   } catch (e) { return 0; }
 }
 
@@ -967,7 +1145,7 @@ function submitModalTx() {
   closeModal('txModal');
 }
 
-// ================= 8. RENDER TOÀN BỘ GIAO DIỆN =================
+// ================= 9. RENDER TOÀN BỘ GIAO DIỆN =================
 function renderAll() {
   const st = getMonthStats();
   const savingsTotal = state.envelopes.filter(e => e.bucket === 'SAVINGS').reduce((s, e) => s + e.balance, 0);
@@ -988,7 +1166,7 @@ function renderAll() {
 
   // 2. Quick Chips
   document.getElementById('quickChipsContainer').innerHTML = state.envelopes.map(e => `
-    <button class="quick-chip" onclick="recordExpense(${e.quickAmt || 50000}, '${e.name}', '${e.id}')">
+    <button class="quick-chip" onclick="recordExpense(${e.quickAmt || 50000}, '${e.name.replace(/'/g, "")}', '${e.id}')">
       <span>${e.name}</span>
       <strong>${Math.round((e.quickAmt || 50000)/1000)}k</strong>
     </button>
@@ -1036,13 +1214,13 @@ function renderAll() {
     `).join('');
   }
 
-  // 5. Danh sách các mục chi tiêu (Tab 2 - Chỉnh sửa trực tiếp)
+  // 5. Danh sách các mục chi tiêu (Tab 2)
   const bucketNames = { NEEDS: 'Thiết yếu', WANTS: 'Linh hoạt', SAVINGS: 'Tích lũy' };
   document.getElementById('envelopesListContainer').innerHTML = state.envelopes.map(e => `
     <div class="list-item">
       <div class="item-left" onclick="openEnvelopeModal('${e.id}')" style="cursor:pointer;">
         <div class="item-title">${e.name}</div>
-        <div class="item-meta">${bucketNames[e.bucket] || e.bucket} • Chạm nhanh: ${Math.round((e.quickAmt||50000)/1000)}k • Dư: ${fmtVND(e.balance)}</div>
+        <div class="item-meta">${bucketNames[e.bucket] || e.bucket} • Chạm nhanh: ${formatWithCommas(e.quickAmt||50000)}đ • Dư: ${fmtVND(e.balance)}</div>
       </div>
       <div class="item-right">
         <button class="btn btn-sm btn-ghost" onclick="openEnvelopeModal('${e.id}')">Sửa</button>
@@ -1051,7 +1229,7 @@ function renderAll() {
     </div>
   `).join('');
 
-  // 6. Tab 3: Tiền nhà riêng, Điện nước riêng & Tiền họ nộp cho tôi
+  // 6. Tab 3: Tiền nhà riêng & Điện nước riêng
   document.getElementById('payRmSel').innerHTML = state.roommates.map(r =>
     `<option value="${r.id}">${r.name}</option>`
   ).join('');
@@ -1060,11 +1238,10 @@ function renderAll() {
     `<option value="${e.id}" ${e.id === state.housing.targetEnvId ? 'selected' : ''}>${e.name}</option>`
   ).join('');
 
-  document.getElementById('myRentInp').value = state.housing.myRent || 0;
-  document.getElementById('elecBillInp').value = state.housing.elecBill || '';
-  document.getElementById('waterBillInp').value = state.housing.waterBill || '';
+  document.getElementById('myRentInp').value = formatWithCommas(state.housing.myRent || 0);
+  document.getElementById('elecBillInp').value = formatWithCommas(state.housing.elecBill || 0);
+  document.getElementById('waterBillInp').value = formatWithCommas(state.housing.waterBill || 0);
 
-  // 6A. Render Tiền Nhà Riêng
   let totalRoommatesRent = 0;
   let totalRentCollected = 0;
 
@@ -1081,7 +1258,7 @@ function renderAll() {
       <div class="rm-status-box">
         <div>
           <div style="font-size:13.5px; font-weight:600;">👤 ${r.name}: ${fmtVND(mustPay)}</div>
-          <div class="item-meta">Họ đã nộp: <strong style="color:var(--green)">${fmtVND(paid)}</strong> • Còn thiếu: <strong style="color:${remain > 0 ? 'var(--orange)' : 'var(--sub)'}">${fmtVND(remain)}</strong></div>
+          <div class="item-meta">Đã nộp: <strong style="color:var(--green)">${fmtVND(paid)}</strong> • Còn thiếu: <strong style="color:${remain > 0 ? 'var(--orange)' : 'var(--sub)'}">${fmtVND(remain)}</strong></div>
         </div>
         <div>
           ${remain > 0
@@ -1096,12 +1273,11 @@ function renderAll() {
   const grandTotalRent = (state.housing.myRent || 0) + totalRoommatesRent;
   document.getElementById('rentBreakdownUI').innerHTML = `
     <div class="card-sub" style="margin-bottom:6px;">
-      Tổng tiền nhà cả phòng: <strong>${fmtVND(grandTotalRent)}</strong> (Họ đã nộp cho bạn: <strong style="color:var(--green)">${fmtVND(totalRentCollected)}</strong> / ${fmtVND(totalRoommatesRent)})
+      Tổng tiền nhà cả phòng: <strong>${fmtVND(grandTotalRent)}</strong> (Họ đã nộp: <strong style="color:var(--green)">${fmtVND(totalRentCollected)}</strong> / ${fmtVND(totalRoommatesRent)})
     </div>
     ${rentRowsHtml}
   `;
 
-  // 6B. Render Tiền Điện Nước Riêng
   const totalUtil = (state.housing.elecBill || 0) + (state.housing.waterBill || 0);
   const rmWeightSum = state.roommates.reduce((s, r) => s + (r.weight || 0), 0);
   const myUtilWeight = Math.max(0, 100 - rmWeightSum);
@@ -1123,7 +1299,7 @@ function renderAll() {
       <div class="rm-status-box">
         <div>
           <div style="font-size:13.5px; font-weight:600;">👤 ${r.name} (${r.weight}%): ${fmtVND(mustPay)}</div>
-          <div class="item-meta">Họ đã nộp: <strong style="color:var(--green)">${fmtVND(paid)}</strong> • Còn thiếu: <strong style="color:${remain > 0 ? 'var(--orange)' : 'var(--sub)'}">${fmtVND(remain)}</strong></div>
+          <div class="item-meta">Đã nộp: <strong style="color:var(--green)">${fmtVND(paid)}</strong> • Còn thiếu: <strong style="color:${remain > 0 ? 'var(--orange)' : 'var(--sub)'}">${fmtVND(remain)}</strong></div>
         </div>
         <div>
           ${remain > 0
@@ -1142,7 +1318,6 @@ function renderAll() {
     ${utilRowsHtml}
   `;
 
-  // 6C. Danh sách Người ở cùng
   document.getElementById('roommatesListUI').innerHTML = state.roommates.map(r => `
     <div class="list-item">
       <div class="item-left" onclick="openRoommateModal('${r.id}')" style="cursor:pointer;">
@@ -1156,7 +1331,6 @@ function renderAll() {
     </div>
   `).join('');
 
-  // 6D. Lịch sử họ nộp tiền
   const payBox = document.getElementById('rmPaymentHistoryUI');
   if (state.housing.payments.length === 0) {
     payBox.innerHTML = `<div class="card-sub">Chưa có khoản nộp tiền phòng / điện nước nào trong tháng.</div>`;
@@ -1175,7 +1349,7 @@ function renderAll() {
     `).join('');
   }
 
-  // 7. Tab 4: Đối chiếu cuối tháng
+  // 7. Tab 4: Đối chiếu
   const totalMustCollect = totalRoommatesRent + totalUtilRoommates;
   const totalCollectedAll = totalRentCollected + totalUtilCollected;
   const totalStillUnpaid = Math.max(0, totalMustCollect - totalCollectedAll);
@@ -1188,6 +1362,8 @@ function renderAll() {
     <div class="list-item"><span class="item-title">4. Tiền nhà + Điện nước HỌ ĐÃ NỘP:</span><span class="amt-in">${fmtVND(totalCollectedAll)}</span></div>
     <div class="list-item"><span class="item-title">5. Tiền nhà + Điện nước HỌ CÒN THIẾU:</span><strong style="color:var(--orange)">${fmtVND(totalStillUnpaid)}</strong></div>
   `;
+
+  attachMoneyFormatters();
 }
 
 renderAll();
