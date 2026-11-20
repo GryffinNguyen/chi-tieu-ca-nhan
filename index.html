@@ -87,10 +87,106 @@
 
     label.field-label { display: block; font-size: 11.5px; color: var(--sub); margin-bottom: 4px; font-weight: 600; }
     input, select, textarea { width: 100%; background: var(--card2); border: 1px solid var(--border); color: var(--text); padding: 10px 12px; border-radius: 10px; font-size: 14px; outline: none; }
-    .date-filter-sel { width: auto; min-width: 138px; padding: 6px 10px; font-size: 12px; font-weight: 600; border-radius: 9px; background: var(--card2); color: var(--text); border: 1px solid var(--border); }
+    .month-filter-sel { width: auto; min-width: 128px; padding: 6px 10px; font-size: 12px; font-weight: 600; border-radius: 9px; background: var(--card2); color: var(--text); border: 1px solid var(--border); }
     input.money-inp { font-variant-numeric: tabular-nums; font-weight: 700; letter-spacing: 0.3px; }
     input:focus, select:focus, textarea:focus { border-color: var(--blue); }
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+
+    /* BẢNG CHỌN NGÀY ĐẦY ĐỦ TRONG THÁNG + CHUYỂN THÁNG TRƯỚC */
+    .date-picker-trigger {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .mini-cal-popover {
+      display: none;
+      background: #0f172a;
+      border: 1px solid rgba(59,130,246,0.35);
+      border-radius: 14px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .mini-cal-popover.open { display: block; }
+    .mini-cal-month-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .mini-cal-nav-btn {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .mini-cal-month-label { font-size: 12.5px; font-weight: 700; }
+    .mini-cal-shortcuts { display: flex; gap: 5px; }
+    .mini-cal-pill {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      color: var(--sub);
+      padding: 4px 8px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .mini-cal-pill.active { background: rgba(59,130,246,0.2); color: #93c5fd; border-color: rgba(59,130,246,0.45); }
+    .mini-cal-dow {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 10px;
+      color: var(--sub);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .mini-cal-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+    }
+    .mini-day-btn {
+      height: 30px;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      background: rgba(30,41,59,0.65);
+      color: var(--text);
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      font-variant-numeric: tabular-nums;
+    }
+    .mini-day-btn.empty { background: transparent; cursor: default; }
+    .mini-day-btn.is-today { border-color: var(--green); }
+    .mini-day-btn.selected { background: var(--blue); color: #fff; }
+    .mini-day-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--orange);
+      margin-top: 1px;
+    }
+    .mini-day-btn.selected .mini-day-dot { background: #fff; }
 
     /* BACKUP TRACKER BOX */
     .backup-tracker-box {
@@ -253,12 +349,35 @@
         <div id="bucketsContainer"></div>
       </div>
 
-      <!-- LỊCH SỬ GIAO DỊCH (BỘ LỌC NGÀY dd-mm-yyyy TỰ ĐỘNG ĐỔI NGÀY) -->
+      <!-- LỊCH SỬ GIAO DỊCH (BẢNG ĐẦY ĐỦ NGÀY TRONG THÁNG + XEM CÁC THÁNG TRƯỚC) -->
       <div class="card">
         <div class="card-header">
           <span class="card-title">Giao dịch Thu / Chi</span>
-          <select id="txDateFilter" class="date-filter-sel" onchange="onTxDateFilterChange()"></select>
+          <button class="date-picker-trigger" id="txDateTrigger" onclick="toggleMiniCalendar()">
+            <span>📅</span>
+            <span id="txDateTriggerLabel">Hôm nay</span>
+            <span>▾</span>
+          </button>
         </div>
+
+        <div class="mini-cal-popover" id="miniCalPopover">
+          <div class="mini-cal-month-bar">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <button class="mini-cal-nav-btn" onclick="stepCalMonth(-1)" title="Tháng trước">‹</button>
+              <span class="mini-cal-month-label" id="miniCalMonthLabel">Tháng 11-2026</span>
+              <button class="mini-cal-nav-btn" onclick="stepCalMonth(1)" title="Tháng sau">›</button>
+            </div>
+            <div class="mini-cal-shortcuts">
+              <button class="mini-cal-pill" id="pillToday" onclick="pickTodayFilter()">Hôm nay</button>
+              <button class="mini-cal-pill" id="pillAll" onclick="pickAllFilter()">Tất cả</button>
+            </div>
+          </div>
+          <div class="mini-cal-dow">
+            <div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div>
+          </div>
+          <div class="mini-cal-days" id="miniCalDaysGrid"></div>
+        </div>
+
         <div id="recentTxList"></div>
       </div>
     </div>
@@ -368,11 +487,11 @@
         <div id="roommatesListUI"></div>
       </div>
 
-      <!-- 5. LỊCH SỬ HỌ NỘP TIỀN -->
+      <!-- 5. LỊCH SỬ HỌ NỘP TIỀN (CHỌN THÁNG TRONG NĂM) -->
       <div class="card">
         <div class="card-header">
           <span class="card-title">Lịch sử họ nộp tiền</span>
-          <select id="payMonthFilter" class="date-filter-sel" onchange="renderAll()"></select>
+          <select id="payMonthFilter" class="month-filter-sel" onchange="renderAll()"></select>
         </div>
         <div id="rmPaymentHistoryUI"></div>
       </div>
@@ -424,7 +543,7 @@
     <div class="nav-item" id="navRec" onclick="switchTab('reconcile', this)"><span>⚖️</span><span>Đối chiếu</span></div>
   </div>
 
-  <!-- ================= MODAL 1: NHẬP CHI TIÊU / THU NHẬP (TẠM TÍNH TRỰC TIẾP) ================= -->
+  <!-- ================= MODAL 1: NHẬP CHI TIÊU / THU NHẬP ================= -->
   <div class="modal-backdrop" id="txModal">
     <div class="modal-sheet">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
@@ -571,10 +690,8 @@ function parseDateSafe(input) {
   if (!input) return new Date();
   if (input instanceof Date) return isNaN(input.getTime()) ? new Date() : input;
   if (typeof input === 'string') {
-    // Hỗ trợ định dạng dd-mm-yyyy
     const dmy = input.match(/^(\d{2})-(\d{2})-(\d{4})$/);
     if (dmy) return new Date(parseInt(dmy[3], 10), parseInt(dmy[2], 10) - 1, parseInt(dmy[1], 10));
-    // Hỗ trợ YYYY-MM-DD thuần để tránh lệch múi giờ UTC
     const ymd = input.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (ymd) return new Date(parseInt(ymd[1], 10), parseInt(ymd[2], 10) - 1, parseInt(ymd[3], 10));
   }
@@ -594,11 +711,6 @@ function formatDateTimeDDMMYYYY(input) {
 
 function getTodayDDMMYYYY() {
   return formatDateDDMMYYYY(new Date());
-}
-
-function getTodayLocalISO() {
-  const now = new Date();
-  return `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())}`;
 }
 
 function getCurrentMonthKey(dateInput) {
@@ -644,9 +756,14 @@ const IDB_STORE = 'app_state';
 let isPrivate = false;
 let modalMode = 'EXPENSE';
 let calcExpr = '';
+
+const _initNow = new Date();
 let currentObservedDay = getTodayDDMMYYYY();
 let txFilterMode = 'TODAY'; // 'TODAY' | 'ALL' | 'dd-mm-yyyy'
 let userManuallyPickedDate = false;
+let miniCalOpen = false;
+let miniCalYear = _initNow.getFullYear();
+let miniCalMonth = _initNow.getMonth(); // 0..11
 
 const defaultState = {
   weights: { NEEDS: 0.50, WANTS: 0.30, SAVINGS: 0.20 },
@@ -772,7 +889,7 @@ if (navigator.storage && navigator.storage.persist) {
 (function registerInlineSW() {
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     const swCode = `
-      const CACHE = 'hybrid-v5';
+      const CACHE = 'hybrid-v6';
       self.addEventListener('install', e => {
         self.skipWaiting();
         e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./', 'index.html']).catch(() => {})));
@@ -814,13 +931,16 @@ function closeModal(id) {
   document.getElementById(id).classList.remove('open');
 }
 
-// Tự động phát hiện khi sang ngày mới (dd-mm-yyyy)
+// Tự động cập nhật khi sang ngày mới (dd-mm-yyyy)
 function checkDayRollover() {
   const actualToday = getTodayDDMMYYYY();
   if (actualToday !== currentObservedDay) {
+    const now = new Date();
     currentObservedDay = actualToday;
     if (!userManuallyPickedDate) {
       txFilterMode = 'TODAY';
+      miniCalYear = now.getFullYear();
+      miniCalMonth = now.getMonth();
     }
     renderAll();
   }
@@ -838,7 +958,6 @@ function getMonthStats() {
   const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
   const currentDay = now.getDate();
   const remainingDays = Math.max(1, daysInMonth - currentDay + 1);
-  const todayISO = getTodayLocalISO();
   const curMonthKey = getCurrentMonthKey(now);
 
   const wantsEnvs = state.envelopes.filter(e => e.bucket === 'WANTS');
@@ -863,7 +982,7 @@ function getMonthStats() {
     now, curMonthKey, daysInMonth, currentDay, remainingDays,
     totalFlexAllocated, totalFlexRemaining, spentToday,
     safeToSpendToday, timePct, spentPct, pacing,
-    totalIncomeMonth, totalExpenseMonth, todayISO
+    totalIncomeMonth, totalExpenseMonth
   };
 }
 
@@ -1152,8 +1271,8 @@ function rolloverMonth() {
 }
 
 function shareRoommateReport() {
-  const curMonth = getCurrentMonthKey();
-  const monthPayments = state.housing.payments.filter(p => (p.monthKey || curMonth) === curMonth);
+  const curMonth = document.getElementById('payMonthFilter').value || getCurrentMonthKey();
+  const monthPayments = state.housing.payments.filter(p => (p.monthKey || getCurrentMonthKey(p.date)) === curMonth);
   const totalUtil = (state.housing.elecBill || 0) + (state.housing.waterBill || 0);
   let lines = [`📋 BẢNG ĐỐI CHIẾU TIỀN NHÀ & ĐIỆN NƯỚC (${curMonth}):`];
 
@@ -1286,7 +1405,6 @@ function formatCalcExpr(expr) {
 function evalCalc() {
   try {
     let cleanExpr = (calcExpr || '0').replace(/×/g, '*').replace(/÷/g, '/');
-    // Loại bỏ toán tử dư ở cuối khi đang gõ dở để xem tạm tính mượt mà
     cleanExpr = cleanExpr.replace(/[+\-*/.]+$/g, '');
     if (!cleanExpr) return 0;
     if (!/^[0-9+\-*/.\s]+$/.test(cleanExpr)) return 0;
@@ -1332,59 +1450,109 @@ function submitModalTx() {
   closeModal('txModal');
 }
 
-// ================= 9. BỘ LỌC NGÀY dd-mm-yyyy & RENDER TOÀN BỘ =================
-function onTxDateFilterChange() {
-  const val = document.getElementById('txDateFilter').value;
-  txFilterMode = val;
-  userManuallyPickedDate = (val !== 'TODAY');
+// ================= 9. BẢNG ĐẦY ĐỦ NGÀY TRONG THÁNG & THÁNG TRONG NĂM =================
+function toggleMiniCalendar() {
+  miniCalOpen = !miniCalOpen;
+  document.getElementById('miniCalPopover').classList.toggle('open', miniCalOpen);
+  if (miniCalOpen) renderMiniCalendar();
+}
+
+function stepCalMonth(delta) {
+  miniCalMonth += delta;
+  if (miniCalMonth > 11) { miniCalMonth = 0; miniCalYear++; }
+  if (miniCalMonth < 0) { miniCalMonth = 11; miniCalYear--; }
+  renderMiniCalendar();
+}
+
+function pickTodayFilter() {
+  const now = new Date();
+  miniCalYear = now.getFullYear();
+  miniCalMonth = now.getMonth();
+  txFilterMode = 'TODAY';
+  userManuallyPickedDate = false;
+  miniCalOpen = false;
+  document.getElementById('miniCalPopover').classList.remove('open');
   renderAll();
 }
 
-function syncTxDateFilter(todayDMY) {
-  const sel = document.getElementById('txDateFilter');
-  if (!sel) return;
-
-  const uniqueDates = new Set([todayDMY]);
-  state.transactions.forEach(t => uniqueDates.add(formatDateDDMMYYYY(t.date)));
-
-  // Sắp xếp ngày mới nhất lên trước (dd-mm-yyyy -> yyyymmdd để so sánh)
-  const sortedDates = Array.from(uniqueDates).sort((a, b) => {
-    const keyA = a.split('-').reverse().join('');
-    const keyB = b.split('-').reverse().join('');
-    return keyB.localeCompare(keyA);
-  });
-
-  let html = `<option value="TODAY">Hôm nay (${todayDMY})</option>`;
-  html += `<option value="ALL">Tất cả ngày</option>`;
-  sortedDates.forEach(dmy => {
-    if (dmy !== todayDMY) {
-      html += `<option value="${dmy}">${dmy}</option>`;
-    }
-  });
-
-  sel.innerHTML = html;
-
-  if (txFilterMode === 'TODAY') {
-    sel.value = 'TODAY';
-  } else if (txFilterMode === 'ALL') {
-    sel.value = 'ALL';
-  } else if (uniqueDates.has(txFilterMode)) {
-    sel.value = txFilterMode;
-  } else {
-    txFilterMode = 'TODAY';
-    sel.value = 'TODAY';
-  }
+function pickAllFilter() {
+  txFilterMode = 'ALL';
+  userManuallyPickedDate = true;
+  miniCalOpen = false;
+  document.getElementById('miniCalPopover').classList.remove('open');
+  renderAll();
 }
 
+function pickSpecificDay(dmy) {
+  txFilterMode = dmy;
+  userManuallyPickedDate = true;
+  miniCalOpen = false;
+  document.getElementById('miniCalPopover').classList.remove('open');
+  renderAll();
+}
+
+function renderMiniCalendar() {
+  const todayDMY = getTodayDDMMYYYY();
+  const activeDayDMY = (txFilterMode === 'TODAY') ? todayDMY : (txFilterMode === 'ALL' ? '' : txFilterMode);
+
+  document.getElementById('miniCalMonthLabel').textContent = `Tháng ${pad2(miniCalMonth + 1)}-${miniCalYear}`;
+  document.getElementById('pillToday').classList.toggle('active', txFilterMode === 'TODAY');
+  document.getElementById('pillAll').classList.toggle('active', txFilterMode === 'ALL');
+
+  const txDatesSet = new Set(state.transactions.map(t => formatDateDDMMYYYY(t.date)));
+  const firstOfMonth = new Date(miniCalYear, miniCalMonth, 1);
+  const startOffset = (firstOfMonth.getDay() + 6) % 7; // Thứ 2 = 0
+  const daysInMonth = new Date(miniCalYear, miniCalMonth + 1, 0).getDate();
+
+  let html = '';
+  for (let i = 0; i < startOffset; i++) {
+    html += `<div class="mini-day-btn empty"></div>`;
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dmy = `${pad2(d)}-${pad2(miniCalMonth + 1)}-${miniCalYear}`;
+    const isToday = (dmy === todayDMY);
+    const isSelected = (dmy === activeDayDMY);
+    const hasTx = txDatesSet.has(dmy);
+
+    html += `
+      <button class="mini-day-btn ${isToday ? 'is-today' : ''} ${isSelected ? 'selected' : ''}" onclick="pickSpecificDay('${dmy}')">
+        <span>${d}</span>
+        ${hasTx ? '<span class="mini-day-dot"></span>' : ''}
+      </button>
+    `;
+  }
+
+  document.getElementById('miniCalDaysGrid').innerHTML = html;
+}
+
+// Danh sách đủ các tháng trong năm cho Lịch sử họ nộp tiền
 function syncPayMonthFilter(curMonthKey) {
   const sel = document.getElementById('payMonthFilter');
   if (!sel) return;
-  const monthSet = new Set([curMonthKey]);
-  state.housing.payments.forEach(p => monthSet.add(p.monthKey || curMonthKey));
-  const sortedMonths = Array.from(monthSet).sort().reverse();
+  const nowYear = new Date().getFullYear();
+  const yearsSet = new Set([nowYear]);
+
+  state.housing.payments.forEach(p => {
+    const mk = p.monthKey || getCurrentMonthKey(p.date);
+    const yPart = parseInt(mk.split('-')[0], 10);
+    if (yPart) yearsSet.add(yPart);
+  });
+
+  const allYearMonths = [];
+  Array.from(yearsSet).sort((a, b) => b - a).forEach(yr => {
+    for (let m = 1; m <= 12; m++) {
+      allYearMonths.push(`${yr}-${pad2(m)}`);
+    }
+  });
+
   const prevVal = sel.value || curMonthKey;
-  sel.innerHTML = sortedMonths.map(m => `<option value="${m}">Tháng ${m}</option>`).join('');
-  sel.value = sortedMonths.includes(prevVal) ? prevVal : curMonthKey;
+  sel.innerHTML = allYearMonths.map(mk => {
+    const [y, m] = mk.split('-');
+    return `<option value="${mk}">Tháng ${m}-${y}</option>`;
+  }).join('');
+
+  sel.value = allYearMonths.includes(prevVal) ? prevVal : curMonthKey;
 }
 
 function renderBackupTracker() {
@@ -1427,7 +1595,6 @@ function renderAll() {
     const todayDMY = getTodayDDMMYYYY();
     currentObservedDay = todayDMY;
 
-    syncTxDateFilter(todayDMY);
     syncPayMonthFilter(st.curMonthKey);
 
     const savingsTotal = state.envelopes.filter(e => e.bucket === 'SAVINGS').reduce((s, e) => s + e.balance, 0);
@@ -1491,7 +1658,20 @@ function renderAll() {
     }).join('');
 
     // 4. Lịch sử giao dịch theo ngày dd-mm-yyyy
-    const targetDayDMY = (txFilterMode === 'TODAY') ? todayDMY : txFilterMode;
+    const triggerLabelEl = document.getElementById('txDateTriggerLabel');
+    let targetDayDMY = '';
+    if (txFilterMode === 'TODAY') {
+      targetDayDMY = todayDMY;
+      triggerLabelEl.textContent = `Hôm nay (${todayDMY})`;
+    } else if (txFilterMode === 'ALL') {
+      triggerLabelEl.textContent = 'Tất cả ngày';
+    } else {
+      targetDayDMY = txFilterMode;
+      triggerLabelEl.textContent = txFilterMode;
+    }
+
+    if (miniCalOpen) renderMiniCalendar();
+
     const filteredTx = (txFilterMode === 'ALL')
       ? state.transactions
       : state.transactions.filter(t => formatDateDDMMYYYY(t.date) === targetDayDMY);
@@ -1563,7 +1743,8 @@ function renderAll() {
       btnUtil.className = 'btn btn-sm btn-ghost';
     }
 
-    const monthPayments = state.housing.payments.filter(p => (p.monthKey || st.curMonthKey) === st.curMonthKey);
+    const selectedPayMonth = document.getElementById('payMonthFilter').value || st.curMonthKey;
+    const monthPayments = state.housing.payments.filter(p => (p.monthKey || getCurrentMonthKey(p.date)) === selectedPayMonth);
 
     let totalRoommatesRent = 0;
     let totalRentCollected = 0;
@@ -1654,13 +1835,12 @@ function renderAll() {
       </div>
     `).join('');
 
-    const selectedPayMonth = document.getElementById('payMonthFilter').value || st.curMonthKey;
-    const filteredPayments = state.housing.payments.filter(p => (p.monthKey || st.curMonthKey) === selectedPayMonth);
     const payBox = document.getElementById('rmPaymentHistoryUI');
-    if (filteredPayments.length === 0) {
-      payBox.innerHTML = `<div class="card-sub">Chưa có khoản nộp tiền nào trong tháng ${selectedPayMonth}.</div>`;
+    if (monthPayments.length === 0) {
+      const [py, pm] = selectedPayMonth.split('-');
+      payBox.innerHTML = `<div class="card-sub">Chưa có khoản nộp tiền nào trong Tháng ${pm}-${py}.</div>`;
     } else {
-      payBox.innerHTML = filteredPayments.map(p => `
+      payBox.innerHTML = monthPayments.map(p => `
         <div class="list-item">
           <div class="item-left">
             <div class="item-title">${p.rmName} nộp ${p.type === 'RENT' ? '🏠 Tiền nhà' : '⚡💧 Điện nước'}</div>
