@@ -114,14 +114,8 @@
       align-items: center;
       justify-content: center;
     }
-    .month-step-btn:active {
-      background: rgba(59, 130, 246, 0.25);
-      color: #93c5fd;
-    }
-    .month-step-btn:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
+    .month-step-btn:active { background: rgba(59, 130, 246, 0.25); color: #93c5fd; }
+    .month-step-btn:disabled { opacity: 0.3; cursor: not-allowed; }
     .month-step-label {
       padding: 0 8px;
       font-size: 12.5px;
@@ -149,6 +143,7 @@
       display: flex;
       align-items: center;
       gap: 5px;
+      font-variant-numeric: tabular-nums;
     }
     .mini-cal-popover {
       display: none;
@@ -231,6 +226,19 @@
       margin-top: 1px;
     }
     .mini-day-btn.selected .mini-day-dot { background: #fff; }
+
+    /* THANH CHỌN NGÀY NHẬP GIAO DỊCH TRONG MODAL */
+    .tx-date-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      font-size: 12.5px;
+    }
 
     /* BACKUP TRACKER BOX */
     .backup-tracker-box {
@@ -397,7 +405,7 @@
       <div class="card">
         <div class="card-header">
           <span class="card-title">Giao dịch Thu / Chi</span>
-          <button class="date-picker-trigger" id="txDateTrigger" onclick="toggleMiniCalendar()">
+          <button type="button" class="date-picker-trigger" id="txDateTrigger" onclick="toggleMiniCalendar()">
             <span>📅</span>
             <span id="txDateTriggerLabel">Hôm nay</span>
             <span>▾</span>
@@ -407,13 +415,13 @@
         <div class="mini-cal-popover" id="miniCalPopover">
           <div class="mini-cal-month-bar">
             <div style="display:flex; align-items:center; gap:6px;">
-              <button class="mini-cal-nav-btn" onclick="stepCalMonth(-1)" title="Tháng trước">&lt;</button>
+              <button type="button" class="mini-cal-nav-btn" onclick="stepCalMonth(-1)" title="Tháng trước">&lt;</button>
               <span class="mini-cal-month-label" id="miniCalMonthLabel">Tháng 11-2026</span>
-              <button class="mini-cal-nav-btn" onclick="stepCalMonth(1)" title="Tháng sau">&gt;</button>
+              <button type="button" class="mini-cal-nav-btn" onclick="stepCalMonth(1)" title="Tháng sau">&gt;</button>
             </div>
             <div class="mini-cal-shortcuts">
-              <button class="mini-cal-pill" id="pillToday" onclick="pickTodayFilter()">Hôm nay</button>
-              <button class="mini-cal-pill" id="pillAll" onclick="pickAllFilter()">Tất cả</button>
+              <button type="button" class="mini-cal-pill" id="pillToday" onclick="pickTodayFilter()">Hôm nay</button>
+              <button type="button" class="mini-cal-pill" id="pillAll" onclick="pickAllFilter()">Tất cả</button>
             </div>
           </div>
           <div class="mini-cal-dow">
@@ -591,17 +599,44 @@
     <div class="nav-item" id="navRec" onclick="switchTab('reconcile', this)"><span>⚖️</span><span>Đối chiếu</span></div>
   </div>
 
-  <!-- ================= MODAL 1: NHẬP CHI TIÊU / THU NHẬP ================= -->
+  <!-- ================= MODAL 1: NHẬP CHI TIÊU / THU NHẬP (CÓ CHỌN NGÀY BÙ) ================= -->
   <div class="modal-backdrop" id="txModal">
     <div class="modal-sheet">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
         <span style="font-weight:700; font-size:15px;">Ghi giao dịch mới</span>
-        <button class="btn btn-sm btn-ghost" onclick="closeModal('txModal')">Đóng ✕</button>
+        <button type="button" class="btn btn-sm btn-ghost" onclick="closeModal('txModal')">Đóng ✕</button>
       </div>
 
       <div class="type-toggle">
-        <button class="type-btn active-exp" id="tabBtnExp" onclick="setModalType('EXPENSE')">➖ Chi tiêu</button>
-        <button class="type-btn" id="tabBtnInc" onclick="setModalType('INCOME')">➕ Thu nhập (Nhận tiền)</button>
+        <button type="button" class="type-btn active-exp" id="tabBtnExp" onclick="setModalType('EXPENSE')">➖ Chi tiêu</button>
+        <button type="button" class="type-btn" id="tabBtnInc" onclick="setModalType('INCOME')">➕ Thu nhập (Nhận tiền)</button>
+      </div>
+
+      <!-- CHỌN NGÀY GIAO DỊCH (DẠNG BẢNG NGÀY TRONG THÁNG + CHUYỂN THÁNG) -->
+      <div class="tx-date-bar">
+        <span style="color:var(--sub); font-weight:600;">Ngày ghi nhận:</span>
+        <button type="button" class="date-picker-trigger" id="txInputDateTrigger" onclick="toggleModalCalendar()">
+          <span>📅</span>
+          <span id="txInputDateLabel">20-11-2026</span>
+          <span>▾</span>
+        </button>
+      </div>
+
+      <div class="mini-cal-popover" id="modalCalPopover">
+        <div class="mini-cal-month-bar">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <button type="button" class="mini-cal-nav-btn" onclick="stepModalCalMonth(-1)" title="Tháng trước">&lt;</button>
+            <span class="mini-cal-month-label" id="modalCalMonthLabel">Tháng 11-2026</span>
+            <button type="button" class="mini-cal-nav-btn" onclick="stepModalCalMonth(1)" title="Tháng sau">&gt;</button>
+          </div>
+          <div class="mini-cal-shortcuts">
+            <button type="button" class="mini-cal-pill" onclick="pickModalToday()">Hôm nay</button>
+          </div>
+        </div>
+        <div class="mini-cal-dow">
+          <div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div>
+        </div>
+        <div class="mini-cal-days" id="modalCalDaysGrid"></div>
       </div>
 
       <div class="calc-box">
@@ -618,29 +653,29 @@
       </div>
 
       <div class="numpad">
-        <button class="num-key op-key" onclick="pressKey('C')">C</button>
-        <button class="num-key op-key" onclick="pressKey('÷')">÷</button>
-        <button class="num-key op-key" onclick="pressKey('×')">×</button>
-        <button class="num-key op-key" onclick="pressKey('DEL')">⌫</button>
+        <button type="button" class="num-key op-key" onclick="pressKey('C')">C</button>
+        <button type="button" class="num-key op-key" onclick="pressKey('÷')">÷</button>
+        <button type="button" class="num-key op-key" onclick="pressKey('×')">×</button>
+        <button type="button" class="num-key op-key" onclick="pressKey('DEL')">⌫</button>
 
-        <button class="num-key" onclick="pressKey('7')">7</button>
-        <button class="num-key" onclick="pressKey('8')">8</button>
-        <button class="num-key" onclick="pressKey('9')">9</button>
-        <button class="num-key op-key" onclick="pressKey('-')">-</button>
+        <button type="button" class="num-key" onclick="pressKey('7')">7</button>
+        <button type="button" class="num-key" onclick="pressKey('8')">8</button>
+        <button type="button" class="num-key" onclick="pressKey('9')">9</button>
+        <button type="button" class="num-key op-key" onclick="pressKey('-')">-</button>
 
-        <button class="num-key" onclick="pressKey('4')">4</button>
-        <button class="num-key" onclick="pressKey('5')">5</button>
-        <button class="num-key" onclick="pressKey('6')">6</button>
-        <button class="num-key op-key" onclick="pressKey('+')">+</button>
+        <button type="button" class="num-key" onclick="pressKey('4')">4</button>
+        <button type="button" class="num-key" onclick="pressKey('5')">5</button>
+        <button type="button" class="num-key" onclick="pressKey('6')">6</button>
+        <button type="button" class="num-key op-key" onclick="pressKey('+')">+</button>
 
-        <button class="num-key" onclick="pressKey('1')">1</button>
-        <button class="num-key" onclick="pressKey('2')">2</button>
-        <button class="num-key" onclick="pressKey('3')">3</button>
-        <button class="num-key op-key" onclick="pressKey('000')">000</button>
+        <button type="button" class="num-key" onclick="pressKey('1')">1</button>
+        <button type="button" class="num-key" onclick="pressKey('2')">2</button>
+        <button type="button" class="num-key" onclick="pressKey('3')">3</button>
+        <button type="button" class="num-key op-key" onclick="pressKey('000')">000</button>
 
-        <button class="num-key" onclick="pressKey('0')">0</button>
-        <button class="num-key" onclick="pressKey('00')">00</button>
-        <button class="num-key" style="grid-column: span 2; background:var(--blue); color:#fff;" onclick="submitModalTx()">LƯU GIAO DỊCH</button>
+        <button type="button" class="num-key" onclick="pressKey('0')">0</button>
+        <button type="button" class="num-key" onclick="pressKey('00')">00</button>
+        <button type="button" class="num-key" style="grid-column: span 2; background:var(--blue); color:#fff;" onclick="submitModalTx()">LƯU GIAO DỊCH</button>
       </div>
     </div>
   </div>
@@ -650,7 +685,7 @@
     <div class="modal-sheet">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
         <span style="font-weight:700; font-size:16px;" id="envModalTitle">Chỉnh sửa mục chi tiêu</span>
-        <button class="btn btn-sm btn-ghost" onclick="closeModal('envModal')">Đóng ✕</button>
+        <button type="button" class="btn btn-sm btn-ghost" onclick="closeModal('envModal')">Đóng ✕</button>
       </div>
       <input type="hidden" id="editEnvId">
       <div style="display:flex; flex-direction:column; gap:10px;">
@@ -682,7 +717,7 @@
             <input type="text" inputmode="numeric" class="money-inp" id="editEnvAllocated" placeholder="2,000,000">
           </div>
         </div>
-        <button class="btn" style="width:100%; margin-top:4px;" onclick="saveEnvelopeModal()">Lưu thay đổi</button>
+        <button type="button" class="btn" style="width:100%; margin-top:4px;" onclick="saveEnvelopeModal()">Lưu thay đổi</button>
       </div>
     </div>
   </div>
@@ -692,7 +727,7 @@
     <div class="modal-sheet">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
         <span style="font-weight:700; font-size:16px;" id="rmModalTitle">Thông tin người ở cùng</span>
-        <button class="btn btn-sm btn-ghost" onclick="closeModal('rmModal')">Đóng ✕</button>
+        <button type="button" class="btn btn-sm btn-ghost" onclick="closeModal('rmModal')">Đóng ✕</button>
       </div>
       <input type="hidden" id="editRmId">
       <div style="display:flex; flex-direction:column; gap:10px;">
@@ -710,7 +745,7 @@
             <input type="text" inputmode="numeric" id="editRmWeight" placeholder="35">
           </div>
         </div>
-        <button class="btn" style="width:100%; margin-top:4px;" onclick="saveRoommateModal()">Lưu người ở cùng</button>
+        <button type="button" class="btn" style="width:100%; margin-top:4px;" onclick="saveRoommateModal()">Lưu người ở cùng</button>
       </div>
     </div>
   </div>
@@ -720,11 +755,11 @@
     <div class="modal-sheet">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
         <span style="font-weight:700; font-size:16px;">Khôi phục từ mã sao lưu</span>
-        <button class="btn btn-sm btn-ghost" onclick="closeModal('restoreModal')">Đóng ✕</button>
+        <button type="button" class="btn btn-sm btn-ghost" onclick="closeModal('restoreModal')">Đóng ✕</button>
       </div>
       <label class="field-label">Dán đoạn mã sao lưu bạn đã lưu trong Ghi chú vào đây:</label>
       <textarea id="restoreCodeArea" rows="5" placeholder='{"weights":...}' style="margin-bottom:10px; font-size:12px;"></textarea>
-      <button class="btn btn-green" style="width:100%;" onclick="applyRestoreCode()">Khôi phục dữ liệu ngay</button>
+      <button type="button" class="btn btn-green" style="width:100%;" onclick="applyRestoreCode()">Khôi phục dữ liệu ngay</button>
     </div>
   </div>
 
@@ -748,6 +783,13 @@ function parseDateSafe(input) {
   }
   const parsed = new Date(input);
   return isNaN(parsed.getTime()) ? new Date() : parsed;
+}
+
+function buildIsoTimestampFromDMY(dmy) {
+  const d = parseDateSafe(dmy);
+  const now = new Date();
+  const full = new Date(d.getFullYear(), d.getMonth(), d.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
+  return full.toISOString();
 }
 
 function formatDateDDMMYYYY(input) {
@@ -839,6 +881,13 @@ let userManuallyPickedDate = false;
 let miniCalOpen = false;
 let miniCalYear = _initNow.getFullYear();
 let miniCalMonth = _initNow.getMonth();
+
+// Ngày nhập bù trong modal giao dịch
+let selectedTxInputDMY = getTodayDDMMYYYY();
+let modalCalOpen = false;
+let modalCalYear = _initNow.getFullYear();
+let modalCalMonth = _initNow.getMonth();
+
 let selectedPayMonthKey = clampMonthKey(getCurrentMonthKey(_initNow));
 
 const defaultState = {
@@ -965,7 +1014,7 @@ if (navigator.storage && navigator.storage.persist) {
 (function registerInlineSW() {
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     const swCode = `
-      const CACHE = 'hybrid-v7';
+      const CACHE = 'hybrid-v8';
       self.addEventListener('install', e => {
         self.skipWaiting();
         e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./', 'index.html']).catch(() => {})));
@@ -1013,6 +1062,7 @@ function checkDayRollover() {
     const now = new Date();
     currentObservedDay = actualToday;
     selectedPayMonthKey = clampMonthKey(getCurrentMonthKey(now));
+    selectedTxInputDMY = actualToday;
     if (!userManuallyPickedDate) {
       txFilterMode = 'TODAY';
       miniCalYear = now.getFullYear();
@@ -1078,8 +1128,8 @@ function distributeIncomeByWeights(amount, multiplier = 1) {
   });
 }
 
-// ================= 4. GHI THU NHẬP & CHI TIÊU =================
-function recordIncome(amount, note, targetMode) {
+// ================= 4. GHI THU NHẬP & CHI TIÊU (HỖ TRỢ NGÀY BÙ) =================
+function recordIncome(amount, note, targetMode, chosenDMY) {
   if (amount <= 0) return;
   if (targetMode === 'AUTO_50_30_20') {
     distributeIncomeByWeights(amount, 1);
@@ -1097,12 +1147,12 @@ function recordIncome(amount, note, targetMode) {
     amount,
     note: note || 'Khoản thu nhập',
     target: targetMode,
-    date: new Date().toISOString()
+    date: buildIsoTimestampFromDMY(chosenDMY || getTodayDDMMYYYY())
   });
   saveState('Đã cộng khoản thu!');
 }
 
-function recordExpense(amount, note, envId) {
+function recordExpense(amount, note, envId, chosenDMY) {
   if (amount <= 0) return;
   const env = state.envelopes.find(e => e.id === envId) || state.envelopes[0];
   if (env) env.balance -= amount;
@@ -1113,7 +1163,7 @@ function recordExpense(amount, note, envId) {
     amount,
     note: note || (env ? env.name : 'Chi tiêu'),
     envId: env ? env.id : '',
-    date: new Date().toISOString()
+    date: buildIsoTimestampFromDMY(chosenDMY || getTodayDDMMYYYY())
   });
   saveState(`Đã ghi -${fmtVND(amount)}`);
 }
@@ -1444,7 +1494,7 @@ function resetToZeroClean() {
   saveState('Đã đặt số dư về 0 ₫');
 }
 
-// ================= 8. BÀN PHÍM TÍNH TOÁN & TẠM TÍNH TRỰC TIẾP =================
+// ================= 8. BÀN PHÍM TÍNH TOÁN & CHỌN NGÀY BÙ TRONG MODAL =================
 function switchTab(tab, el) {
   document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
   document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
@@ -1455,9 +1505,78 @@ function switchTab(tab, el) {
 function openTxModal(mode) {
   calcExpr = '';
   document.getElementById('txNoteInp').value = '';
+
+  const baseDate = (txFilterMode !== 'TODAY' && txFilterMode !== 'ALL')
+    ? parseDateSafe(txFilterMode)
+    : new Date();
+  selectedTxInputDMY = formatDateDDMMYYYY(baseDate);
+  modalCalYear = baseDate.getFullYear();
+  modalCalMonth = baseDate.getMonth();
+  modalCalOpen = false;
+  document.getElementById('modalCalPopover').classList.remove('open');
+  document.getElementById('txInputDateLabel').textContent = selectedTxInputDMY;
+
   setModalType(mode);
   updateCalcDisplay();
   document.getElementById('txModal').classList.add('open');
+}
+
+function toggleModalCalendar() {
+  modalCalOpen = !modalCalOpen;
+  document.getElementById('modalCalPopover').classList.toggle('open', modalCalOpen);
+  if (modalCalOpen) renderModalCalendar();
+}
+
+function stepModalCalMonth(delta) {
+  modalCalMonth += delta;
+  if (modalCalMonth > 11) { modalCalMonth = 0; modalCalYear++; }
+  if (modalCalMonth < 0) { modalCalMonth = 11; modalCalYear--; }
+  renderModalCalendar();
+}
+
+function pickModalToday() {
+  const now = new Date();
+  modalCalYear = now.getFullYear();
+  modalCalMonth = now.getMonth();
+  selectedTxInputDMY = formatDateDDMMYYYY(now);
+  document.getElementById('txInputDateLabel').textContent = selectedTxInputDMY;
+  modalCalOpen = false;
+  document.getElementById('modalCalPopover').classList.remove('open');
+}
+
+function pickModalSpecificDay(dmy) {
+  selectedTxInputDMY = dmy;
+  document.getElementById('txInputDateLabel').textContent = dmy;
+  modalCalOpen = false;
+  document.getElementById('modalCalPopover').classList.remove('open');
+}
+
+function renderModalCalendar() {
+  const todayDMY = getTodayDDMMYYYY();
+  document.getElementById('modalCalMonthLabel').textContent = `Tháng ${pad2(modalCalMonth + 1)}-${modalCalYear}`;
+
+  const firstOfMonth = new Date(modalCalYear, modalCalMonth, 1);
+  const startOffset = (firstOfMonth.getDay() + 6) % 7;
+  const daysInMonth = new Date(modalCalYear, modalCalMonth + 1, 0).getDate();
+
+  let html = '';
+  for (let i = 0; i < startOffset; i++) {
+    html += `<div class="mini-day-btn empty"></div>`;
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dmy = `${pad2(d)}-${pad2(modalCalMonth + 1)}-${modalCalYear}`;
+    const isToday = (dmy === todayDMY);
+    const isSelected = (dmy === selectedTxInputDMY);
+
+    html += `
+      <button type="button" class="mini-day-btn ${isToday ? 'is-today' : ''} ${isSelected ? 'selected' : ''}" onclick="pickModalSpecificDay('${dmy}')">
+        <span>${d}</span>
+      </button>
+    `;
+  }
+
+  document.getElementById('modalCalDaysGrid').innerHTML = html;
 }
 
 function setModalType(mode) {
@@ -1521,9 +1640,10 @@ function submitModalTx() {
   if (amt <= 0) return alert('Vui lòng nhập số tiền lớn hơn 0!');
   const note = document.getElementById('txNoteInp').value.trim();
   const target = document.getElementById('txTargetSel').value;
+  const chosenDMY = selectedTxInputDMY || getTodayDDMMYYYY();
 
-  if (modalMode === 'INCOME') recordIncome(amt, note, target);
-  else recordExpense(amt, note, target);
+  if (modalMode === 'INCOME') recordIncome(amt, note, target, chosenDMY);
+  else recordExpense(amt, note, target, chosenDMY);
   closeModal('txModal');
 }
 
@@ -1593,7 +1713,7 @@ function renderMiniCalendar() {
     const hasTx = txDatesSet.has(dmy);
 
     html += `
-      <button class="mini-day-btn ${isToday ? 'is-today' : ''} ${isSelected ? 'selected' : ''}" onclick="pickSpecificDay('${dmy}')">
+      <button type="button" class="mini-day-btn ${isToday ? 'is-today' : ''} ${isSelected ? 'selected' : ''}" onclick="pickSpecificDay('${dmy}')">
         <span>${d}</span>
         ${hasTx ? '<span class="mini-day-dot"></span>' : ''}
       </button>
@@ -1694,7 +1814,7 @@ function renderAll() {
     document.getElementById('quickChipsContainer').innerHTML = state.envelopes.map(e => {
       const safeName = e.name.replace(/'/g, '').replace(/"/g, '');
       return `
-        <button class="quick-chip" onclick="recordExpense(${e.quickAmt || 50000}, '${safeName}', '${e.id}')">
+        <button type="button" class="quick-chip" onclick="recordExpense(${e.quickAmt || 50000}, '${safeName}', '${e.id}')">
           <span>${e.name}</span>
           <strong>${formatWithCommas(e.quickAmt || 50000)}</strong>
         </button>
@@ -1758,7 +1878,7 @@ function renderAll() {
           </div>
           <div class="item-right">
             <span class="${t.type === 'INCOME' ? 'amt-in' : 'amt-out'}">${t.type === 'INCOME' ? '+' : '-'}${fmtVND(t.amount)}</span>
-            <button class="btn btn-sm btn-red" onclick="deleteTransaction('${t.id}')">Xóa</button>
+            <button type="button" class="btn btn-sm btn-red" onclick="deleteTransaction('${t.id}')">Xóa</button>
           </div>
         </div>
       `).join('');
@@ -1773,8 +1893,8 @@ function renderAll() {
           <div class="item-meta">${bucketNames[e.bucket] || e.bucket} • Nhanh: ${formatWithCommas(e.quickAmt||50000)}đ • Dư: ${fmtVND(e.balance)}</div>
         </div>
         <div class="item-right">
-          <button class="btn btn-sm btn-ghost" onclick="openEnvelopeModal('${e.id}')">Sửa</button>
-          <button class="btn btn-sm btn-red" onclick="deleteEnvelope('${e.id}')">Xóa</button>
+          <button type="button" class="btn btn-sm btn-ghost" onclick="openEnvelopeModal('${e.id}')">Sửa</button>
+          <button type="button" class="btn btn-sm btn-red" onclick="deleteEnvelope('${e.id}')">Xóa</button>
         </div>
       </div>
     `).join('');
@@ -1833,7 +1953,7 @@ function renderAll() {
           </div>
           <div>
             ${remain > 0
-              ? `<button class="btn btn-sm btn-green" onclick="recordRoommatePayment('${r.id}', 'RENT', ${remain})">Nộp đủ</button>`
+              ? `<button type="button" class="btn btn-sm btn-green" onclick="recordRoommatePayment('${r.id}', 'RENT', ${remain})">Nộp đủ</button>`
               : `<span class="badge-paid">✓ Đã nộp đủ</span>`
             }
           </div>
@@ -1874,7 +1994,7 @@ function renderAll() {
           </div>
           <div>
             ${remain > 0
-              ? `<button class="btn btn-sm btn-green" onclick="recordRoommatePayment('${r.id}', 'UTIL', ${remain})">Nộp đủ</button>`
+              ? `<button type="button" class="btn btn-sm btn-green" onclick="recordRoommatePayment('${r.id}', 'UTIL', ${remain})">Nộp đủ</button>`
               : `<span class="badge-paid">✓ Đã nộp đủ</span>`
             }
           </div>
@@ -1896,8 +2016,8 @@ function renderAll() {
           <div class="item-meta">Tiền nhà: ${fmtVND(r.rentShare)} • Điện nước: ${r.weight}%</div>
         </div>
         <div class="item-right">
-          <button class="btn btn-sm btn-ghost" onclick="openRoommateModal('${r.id}')">Sửa</button>
-          <button class="btn btn-sm btn-red" onclick="removeRoommate('${r.id}')">Xóa</button>
+          <button type="button" class="btn btn-sm btn-ghost" onclick="openRoommateModal('${r.id}')">Sửa</button>
+          <button type="button" class="btn btn-sm btn-red" onclick="removeRoommate('${r.id}')">Xóa</button>
         </div>
       </div>
     `).join('');
@@ -1914,7 +2034,7 @@ function renderAll() {
           </div>
           <div class="item-right">
             <span class="amt-in">+${fmtVND(p.amount)}</span>
-            <button class="btn btn-sm btn-red" onclick="deleteRoommatePayment('${p.id}')">Xóa</button>
+            <button type="button" class="btn btn-sm btn-red" onclick="deleteRoommatePayment('${p.id}')">Xóa</button>
           </div>
         </div>
       `).join('');
