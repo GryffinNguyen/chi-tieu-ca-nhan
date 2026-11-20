@@ -91,6 +91,71 @@
     input:focus, select:focus, textarea:focus { border-color: var(--blue); }
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
 
+    /* CYCLE SEGMENTED SWITCH (1 THÁNG / 2 THÁNG) */
+    .cycle-switch {
+      display: inline-flex;
+      background: var(--bg);
+      padding: 3px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .cycle-btn {
+      border: none;
+      background: transparent;
+      color: var(--sub);
+      padding: 5px 11px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .cycle-btn.active {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    /* FORMULA SUMMARY STRIP */
+    .formula-strip {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.25);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-top: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+    }
+
+    /* ROOMMATE PERSON CARD */
+    .rm-person-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .rm-person-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .rm-sub-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(11, 15, 25, 0.55);
+      padding: 8px 10px;
+      border-radius: 9px;
+      gap: 8px;
+    }
+    .badge-paid { background: rgba(16,185,129,0.2); color: var(--green); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+
     /* BỘ CHỌN THÁNG NGANG | < mm - yyyy > | */
     .month-stepper {
       display: inline-flex;
@@ -131,7 +196,7 @@
       min-width: 82px;
     }
 
-    /* BẢNG CHỌN NGÀY NHẬP BÙ TRONG MODAL (KHÔNG GÂY GIẬT LAYOUT) */
+    /* BẢNG CHỌN NGÀY NHẬP BÙ TRONG MODAL */
     .date-picker-trigger {
       background: var(--card2);
       border: 1px solid var(--border);
@@ -250,10 +315,6 @@
     .backup-pill.ok { background: rgba(16,185,129,0.18); color: var(--green); }
     .backup-pill.warn { background: rgba(245,158,11,0.2); color: var(--orange); }
 
-    /* ROOMMATE STATUS BADGES */
-    .rm-status-box { display: flex; justify-content: space-between; align-items: center; background: var(--card2); padding: 10px 12px; border-radius: 10px; margin-top: 6px; gap: 8px; }
-    .badge-paid { background: rgba(16,185,129,0.2); color: var(--green); padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; }
-
     /* BOTTOM NAV BAR */
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
@@ -268,7 +329,7 @@
     .nav-item.active { color: var(--blue); }
     .nav-plus { width: 52px; height: 52px; border-radius: 26px; background: var(--blue); color: #fff; border: none; font-size: 28px; display: flex; align-items: center; justify-content: center; margin: -18px auto 0; box-shadow: 0 6px 20px rgba(59,130,246,0.45); cursor: pointer; touch-action: manipulation; }
 
-    /* MODALS - TỐI ƯU GPU & CHỐNG LOẠN NÚT TRÊN IOS */
+    /* MODALS */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -452,7 +513,7 @@
       </div>
     </div>
 
-    <!-- ================= TAB 3: TIỀN PHÒNG & ĐIỆN NƯỚC RIÊNG ================= -->
+    <!-- ================= TAB 3: TIỀN PHÒNG (CHU KỲ 1T/2T, ĐIỆN CHIA ĐỀU, NƯỚC 50K/NGƯỜI) ================= -->
     <div class="tab-page" id="page-roommates">
 
       <!-- 1. NHẬP TIỀN HỌ NỘP CHO TÔI -->
@@ -460,19 +521,19 @@
         <div class="card-header">
           <div>
             <div class="card-title" style="color:var(--green);">💸 Nhập Tiền Họ Nộp Cho Tôi</div>
-            <div class="card-sub">Ghi nhận khi người ở cùng đưa tiền hoặc chuyển khoản</div>
+            <div class="card-sub" id="payHelperSub">Ghi nhận khi người ở cùng chuyển khoản hoặc đưa tiền mặt</div>
           </div>
         </div>
         <div class="form-grid">
           <div>
             <label class="field-label">Người nộp</label>
-            <select id="payRmSel"></select>
+            <select id="payRmSel" onchange="updatePayHint()"></select>
           </div>
           <div>
             <label class="field-label">Khoản nộp</label>
-            <select id="payTypeSel">
+            <select id="payTypeSel" onchange="updatePayHint()">
               <option value="RENT">🏠 Tiền nhà</option>
-              <option value="UTIL">⚡💧 Tiền điện nước</option>
+              <option value="UTIL">⚡💧 Điện + Nước</option>
             </select>
           </div>
         </div>
@@ -487,63 +548,62 @@
         </div>
       </div>
 
-      <!-- 2. TIỀN NHÀ RIÊNG -->
+      <!-- 2. CÀI ĐẶT KỲ THU (1 THÁNG / 2 THÁNG) & ĐIỆN CHIA ĐỀU / NƯỚC 50K -->
       <div class="card">
         <div class="card-header">
           <div>
-            <div class="card-title">🏠 Tiền Nhà Riêng</div>
-            <div class="card-sub">Theo dõi riêng tiền nhà của bạn và của từng người</div>
+            <div class="card-title">⚙️ Kỳ Thu & Điện / Nước</div>
+            <div class="card-sub">Điện chia đều cả phòng • Nước 50,000 đ/người/tháng</div>
           </div>
-          <button type="button" class="btn btn-sm btn-ghost" id="btnDeductMyRent" onclick="deductMyRentToEnvelope()">Trừ phần tôi</button>
+          <div class="cycle-switch" role="group" aria-label="Chu kỳ thu tiền">
+            <button type="button" class="cycle-btn active" id="btnCycle1" onclick="setBillingCycle(1)">1 Tháng</button>
+            <button type="button" class="cycle-btn" id="btnCycle2" onclick="setBillingCycle(2)">2 Tháng</button>
+          </div>
         </div>
+
         <div class="form-grid">
           <div>
-            <label class="field-label">Tiền nhà của riêng tôi (đ)</label>
-            <input type="text" inputmode="numeric" class="money-inp" id="myRentInp" placeholder="1,500,000" onchange="saveRentSettings()">
+            <label class="field-label">Tiền nhà của tôi / 1 tháng (đ)</label>
+            <input type="text" inputmode="numeric" class="money-inp" id="myRentInp" placeholder="1,500,000" onchange="saveHousingSettings()">
           </div>
           <div>
-            <label class="field-label">Trừ vào mục chi tiêu</label>
-            <select id="housingEnvSel" onchange="saveRentSettings()"></select>
+            <label class="field-label">Trừ phần tôi vào mục</label>
+            <select id="housingEnvSel" onchange="saveHousingSettings()"></select>
           </div>
         </div>
-        <div id="rentBreakdownUI"></div>
-      </div>
 
-      <!-- 3. TIỀN ĐIỆN NƯỚC RIÊNG -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">⚡💧 Tiền Điện Nước Riêng</div>
-            <div class="card-sub">Tự động chia theo % của từng người và phần của bạn</div>
-          </div>
-          <button type="button" class="btn btn-sm btn-ghost" id="btnDeductMyUtil" onclick="deductMyUtilToEnvelope()">Trừ phần tôi</button>
-        </div>
         <div class="form-grid">
           <div>
-            <label class="field-label">Tiền Điện tháng này (đ)</label>
-            <input type="text" inputmode="numeric" class="money-inp" id="elecBillInp" placeholder="900,000" onchange="saveUtilSettings()">
+            <label class="field-label">Tổng tiền Điện kỳ này (Chia đều)</label>
+            <input type="text" inputmode="numeric" class="money-inp" id="elecBillInp" placeholder="900,000" onchange="saveHousingSettings()">
           </div>
           <div>
-            <label class="field-label">Tiền Nước / Phụ phí (đ)</label>
-            <input type="text" inputmode="numeric" class="money-inp" id="waterBillInp" placeholder="150,000" onchange="saveUtilSettings()">
+            <label class="field-label">Đơn giá Nước / người / tháng</label>
+            <input type="text" inputmode="numeric" class="money-inp" id="waterRateInp" placeholder="50,000" onchange="saveHousingSettings()">
           </div>
         </div>
-        <div id="utilBreakdownUI"></div>
+
+        <div class="formula-strip" id="formulaSummaryStrip"></div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
+          <button type="button" class="btn btn-sm btn-ghost" id="btnDeductMyRent" onclick="deductMyRentToEnvelope()">Trừ tiền nhà của tôi</button>
+          <button type="button" class="btn btn-sm btn-ghost" id="btnDeductMyUtil" onclick="deductMyUtilToEnvelope()">Trừ điện nước của tôi</button>
+        </div>
       </div>
 
-      <!-- 4. DANH SÁCH NGƯỜI Ở CÙNG -->
+      <!-- 3. BẢNG ĐỐI CHIẾU TỪNG NGƯỜI (NHÀ + ĐIỆN CHIA ĐỀU + NƯỚC 50K) -->
       <div class="card">
         <div class="card-header">
           <div>
-            <div class="card-title">👥 Người ở cùng (Thêm / Sửa / Xóa)</div>
-            <div class="card-sub">Chỉnh tên, mức tiền nhà và % chia điện nước</div>
+            <div class="card-title">📋 Đối Chiếu Từng Người Ở Cùng</div>
+            <div class="card-sub" id="cycleStatusSub">Kỳ thu 1 tháng • Bấm "Nộp đủ" để chốt nhanh</div>
           </div>
           <button type="button" class="btn btn-sm" onclick="openRoommateModal(null)">+ Thêm người</button>
         </div>
-        <div id="roommatesListUI"></div>
+        <div id="roommateCardsContainer"></div>
       </div>
 
-      <!-- 5. LỊCH SỬ HỌ NỘP TIỀN -->
+      <!-- 4. LỊCH SỬ HỌ NỘP TIỀN -->
       <div class="card">
         <div class="card-header">
           <span class="card-title">Lịch sử họ nộp tiền</span>
@@ -739,16 +799,11 @@
           <label class="field-label">Tên người ở cùng</label>
           <input type="text" id="editRmName" placeholder="VD: Dung">
         </div>
-        <div class="form-grid">
-          <div>
-            <label class="field-label">Tiền nhà mỗi tháng (đ)</label>
-            <input type="text" inputmode="numeric" class="money-inp" id="editRmRent" placeholder="1,500,000">
-          </div>
-          <div>
-            <label class="field-label">% Chia điện nước</label>
-            <input type="text" inputmode="numeric" id="editRmWeight" placeholder="35">
-          </div>
+        <div>
+          <label class="field-label">Tiền nhà mỗi tháng của người này (đ)</label>
+          <input type="text" inputmode="numeric" class="money-inp" id="editRmRent" placeholder="1,500,000">
         </div>
+        <div class="card-sub">Tiền điện sẽ tự chia đều cho cả phòng, tiền nước tính cố định theo đơn giá/người/tháng.</div>
         <button type="button" class="btn" style="width:100%; margin-top:4px;" onclick="saveRoommateModal()">Lưu người ở cùng</button>
       </div>
     </div>
@@ -901,14 +956,15 @@ const defaultState = {
     { id: 'env_save', name: '🛡️ Quỹ Tích lũy', bucket: 'SAVINGS', allocated: 0, balance: 0, quickAmt: 500000 }
   ],
   roommates: [
-    { id: 'rm_1', name: 'Dung', weight: 35, rentShare: 1500000 },
-    { id: 'rm_2', name: 'Người ở cùng 2', weight: 30, rentShare: 1500000 }
+    { id: 'rm_1', name: 'Dung', rentShare: 1500000 },
+    { id: 'rm_2', name: 'Người ở cùng 2', rentShare: 1500000 }
   ],
   housing: {
+    billingMonths: 1, // 1 tháng hoặc 2 tháng
     myRent: 1500000,
     targetEnvId: 'env_house',
     elecBill: 0,
-    waterBill: 0,
+    waterPerPerson: 50000,
     deductedMonths: { RENT: '', UTIL: '' },
     payments: []
   },
@@ -928,13 +984,20 @@ function normalizeState(raw) {
   if (!Array.isArray(raw.transactions)) raw.transactions = [];
   if (!raw.housing || typeof raw.housing !== 'object') {
     raw.housing = {
+      billingMonths: 1,
       myRent: 1500000,
       targetEnvId: raw.envelopes[0].id,
       elecBill: 0,
-      waterBill: 0,
+      waterPerPerson: 50000,
       deductedMonths: { RENT: '', UTIL: '' },
       payments: []
     };
+  }
+  if (raw.housing.billingMonths !== 1 && raw.housing.billingMonths !== 2) {
+    raw.housing.billingMonths = 1;
+  }
+  if (typeof raw.housing.waterPerPerson !== 'number') {
+    raw.housing.waterPerPerson = 50000;
   }
   if (!raw.housing.deductedMonths || typeof raw.housing.deductedMonths !== 'object') {
     raw.housing.deductedMonths = { RENT: '', UTIL: '' };
@@ -946,7 +1009,6 @@ function normalizeState(raw) {
   if (Array.isArray(raw.roommates)) {
     raw.roommates.forEach(r => {
       if (typeof r.rentShare !== 'number') r.rentShare = 1500000;
-      if (typeof r.weight !== 'number') r.weight = 35;
     });
   } else {
     raw.roommates = JSON.parse(JSON.stringify(defaultState.roommates));
@@ -1014,7 +1076,7 @@ if (navigator.storage && navigator.storage.persist) {
 (function registerInlineSW() {
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     const swCode = `
-      const CACHE = 'hybrid-v10';
+      const CACHE = 'hybrid-v11';
       self.addEventListener('install', e => {
         self.skipWaiting();
         e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./', 'index.html']).catch(() => {})));
@@ -1270,7 +1332,92 @@ function deleteEnvelope(envId) {
   saveState('Đã xóa mục');
 }
 
-// ================= 6. TIỀN NHÀ RIÊNG, ĐIỆN NƯỚC RIÊNG & CHỐNG TRỪ TRÙNG =================
+// ================= 6. TIỀN NHÀ & ĐIỆN CHIA ĐỀU / NƯỚC 50K / CHU KỲ 1T-2T =================
+function getHousingCycleMetrics() {
+  const months = state.housing.billingMonths === 2 ? 2 : 1;
+  const totalHeadcount = state.roommates.length + 1; // Bạn + người ở cùng
+  const totalElec = state.housing.elecBill || 0;
+  const elecPerPerson = totalHeadcount > 0 ? Math.round(totalElec / totalHeadcount) : 0;
+
+  const waterRate = typeof state.housing.waterPerPerson === 'number' ? state.housing.waterPerPerson : 50000;
+  const waterPerPerson = waterRate * months;
+  const totalWaterAll = waterPerPerson * totalHeadcount;
+
+  const myRentDue = (state.housing.myRent || 0) * months;
+  const myUtilDue = elecPerPerson + waterPerPerson;
+
+  const selectedPayMonth = clampMonthKey(selectedPayMonthKey);
+  const monthPayments = state.housing.payments.filter(p => (p.monthKey || getCurrentMonthKey(p.date)) === selectedPayMonth);
+
+  const roommateDetails = state.roommates.map(r => {
+    const rentDue = (r.rentShare || 0) * months;
+    const rentPaid = monthPayments
+      .filter(p => p.rmId === r.id && p.type === 'RENT')
+      .reduce((s, p) => s + p.amount, 0);
+    const rentRemain = Math.max(0, rentDue - rentPaid);
+
+    const utilDue = elecPerPerson + waterPerPerson;
+    const utilPaid = monthPayments
+      .filter(p => p.rmId === r.id && p.type === 'UTIL')
+      .reduce((s, p) => s + p.amount, 0);
+    const utilRemain = Math.max(0, utilDue - utilPaid);
+
+    return {
+      rm: r,
+      rentDue, rentPaid, rentRemain,
+      utilDue, utilPaid, utilRemain
+    };
+  });
+
+  return {
+    months,
+    totalHeadcount,
+    totalElec,
+    elecPerPerson,
+    waterRate,
+    waterPerPerson,
+    totalWaterAll,
+    myRentDue,
+    myUtilDue,
+    selectedPayMonth,
+    monthPayments,
+    roommateDetails
+  };
+}
+
+function setBillingCycle(m) {
+  state.housing.billingMonths = (m === 2) ? 2 : 1;
+  saveState(`Đã chuyển sang kỳ thu ${state.housing.billingMonths} tháng`);
+}
+
+function saveHousingSettings() {
+  state.housing.myRent = parseMoney(document.getElementById('myRentInp').value);
+  state.housing.targetEnvId = document.getElementById('housingEnvSel').value;
+  state.housing.elecBill = parseMoney(document.getElementById('elecBillInp').value);
+  const wVal = document.getElementById('waterRateInp').value.trim();
+  state.housing.waterPerPerson = wVal === '' ? 0 : parseMoney(wVal);
+  saveState();
+}
+
+function updatePayHint() {
+  const m = getHousingCycleMetrics();
+  const rmId = document.getElementById('payRmSel').value;
+  const type = document.getElementById('payTypeSel').value;
+  const detail = m.roommateDetails.find(d => d.rm.id === rmId);
+  const subEl = document.getElementById('payHelperSub');
+  if (!detail || !subEl) return;
+
+  const remain = (type === 'RENT') ? detail.rentRemain : detail.utilRemain;
+  const label = (type === 'RENT') ? 'Tiền nhà' : 'Điện + Nước';
+  subEl.innerHTML = remain > 0
+    ? `${detail.rm.name} còn thiếu ${label}: <strong style="color:var(--orange); cursor:pointer; text-decoration:underline;" onclick="fillPayRemain(${remain})">${fmtVND(remain)} (Chạm điền nhanh)</strong>`
+    : `${detail.rm.name} đã nộp đủ ${label} kỳ này.`;
+}
+
+function fillPayRemain(amt) {
+  document.getElementById('payAmountInp').value = formatWithCommas(amt);
+}
+
 function openRoommateModal(rmId) {
   const rm = state.roommates.find(r => r.id === rmId);
   if (rm) {
@@ -1278,13 +1425,11 @@ function openRoommateModal(rmId) {
     document.getElementById('editRmId').value = rm.id;
     document.getElementById('editRmName').value = rm.name;
     document.getElementById('editRmRent').value = formatWithCommas(rm.rentShare || 0);
-    document.getElementById('editRmWeight').value = rm.weight || 30;
   } else {
     document.getElementById('rmModalTitle').textContent = 'Thêm người ở cùng';
     document.getElementById('editRmId').value = '';
     document.getElementById('editRmName').value = '';
     document.getElementById('editRmRent').value = '1,500,000';
-    document.getElementById('editRmWeight').value = 30;
   }
   document.getElementById('rmModal').classList.add('open');
 }
@@ -1293,7 +1438,6 @@ function saveRoommateModal() {
   const id = document.getElementById('editRmId').value;
   const name = document.getElementById('editRmName').value.trim();
   const rentShare = parseMoney(document.getElementById('editRmRent').value);
-  const weight = parseFloat(document.getElementById('editRmWeight').value) || 0;
 
   if (!name) return alert('Vui lòng nhập tên người ở cùng!');
 
@@ -1302,30 +1446,17 @@ function saveRoommateModal() {
     if (rm) {
       rm.name = name;
       rm.rentShare = rentShare;
-      rm.weight = weight;
     }
   } else {
-    state.roommates.push({ id: 'rm_' + Date.now(), name, rentShare, weight });
+    state.roommates.push({ id: 'rm_' + Date.now(), name, rentShare });
   }
   closeModal('rmModal');
-  saveState('Đã lưu thông tin');
+  saveState('Đã lưu người ở cùng');
 }
 
 function removeRoommate(rmId) {
   state.roommates = state.roommates.filter(r => r.id !== rmId);
   saveState('Đã xóa người ở cùng');
-}
-
-function saveRentSettings() {
-  state.housing.myRent = parseMoney(document.getElementById('myRentInp').value);
-  state.housing.targetEnvId = document.getElementById('housingEnvSel').value;
-  saveState();
-}
-
-function saveUtilSettings() {
-  state.housing.elecBill = parseMoney(document.getElementById('elecBillInp').value);
-  state.housing.waterBill = parseMoney(document.getElementById('waterBillInp').value);
-  saveState();
 }
 
 function recordRoommatePayment(customRmId, customType, customAmt) {
@@ -1358,30 +1489,27 @@ function deleteRoommatePayment(payId) {
 }
 
 function deductMyRentToEnvelope() {
-  const amt = state.housing.myRent || 0;
-  if (amt <= 0) return alert('Hãy nhập số tiền nhà của riêng bạn trước!');
+  const m = getHousingCycleMetrics();
+  if (m.myRentDue <= 0) return alert('Hãy nhập tiền nhà của riêng bạn trước!');
   const curMonth = getCurrentMonthKey();
 
   if (state.housing.deductedMonths.RENT === curMonth) {
-    if (!confirm('Tháng này bạn đã trừ tiền nhà phần của mình rồi. Có chắc muốn trừ thêm lần nữa không?')) return;
+    if (!confirm('Kỳ này bạn đã trừ tiền nhà phần của mình rồi. Có chắc muốn trừ thêm lần nữa không?')) return;
   }
   state.housing.deductedMonths.RENT = curMonth;
-  recordExpense(amt, `🏠 Tiền nhà phần của tôi (${formatMonthDisplayMMYYYY(curMonth)})`, state.housing.targetEnvId);
+  recordExpense(m.myRentDue, `🏠 Tiền nhà của tôi (${m.months}T • ${formatMonthDisplayMMYYYY(curMonth)})`, state.housing.targetEnvId);
 }
 
 function deductMyUtilToEnvelope() {
-  const totalUtil = (state.housing.elecBill || 0) + (state.housing.waterBill || 0);
-  const rmWeights = state.roommates.reduce((s, r) => s + (r.weight || 0), 0);
-  const myWeight = Math.max(0, 100 - rmWeights);
-  const myUtilAmt = Math.round((totalUtil * myWeight) / 100);
-  if (myUtilAmt <= 0) return alert('Chưa có hóa đơn điện nước để trừ!');
+  const m = getHousingCycleMetrics();
+  if (m.myUtilDue <= 0) return alert('Chưa có tiền điện nước để trừ!');
   const curMonth = getCurrentMonthKey();
 
   if (state.housing.deductedMonths.UTIL === curMonth) {
-    if (!confirm('Tháng này bạn đã trừ tiền điện nước phần của mình rồi. Có chắc muốn trừ thêm lần nữa không?')) return;
+    if (!confirm('Kỳ này bạn đã trừ điện nước phần của mình rồi. Có chắc muốn trừ thêm lần nữa không?')) return;
   }
   state.housing.deductedMonths.UTIL = curMonth;
-  recordExpense(myUtilAmt, `⚡💧 Điện nước phần của tôi (${myWeight}%)`, state.housing.targetEnvId);
+  recordExpense(m.myUtilDue, `⚡💧 Điện chia đều + Nước (${m.months}T)`, state.housing.targetEnvId);
 }
 
 // ================= 7. ĐỐI CHIẾU & BỘ THEO DÕI SAO LƯU =================
@@ -1414,22 +1542,15 @@ function rolloverMonth() {
 }
 
 function shareRoommateReport() {
-  const curMonth = clampMonthKey(selectedPayMonthKey || getCurrentMonthKey());
-  const monthPayments = state.housing.payments.filter(p => (p.monthKey || getCurrentMonthKey(p.date)) === curMonth);
-  const totalUtil = (state.housing.elecBill || 0) + (state.housing.waterBill || 0);
-  let lines = [`📋 BẢNG ĐỐI CHIẾU TIỀN NHÀ & ĐIỆN NƯỚC (${formatMonthDisplayMMYYYY(curMonth)}):`];
+  const m = getHousingCycleMetrics();
+  let lines = [`📋 ĐỐI CHIẾU TIỀN PHÒNG (Kỳ ${m.months} tháng • ${formatMonthDisplayMMYYYY(m.selectedPayMonth)}):`];
+  lines.push(`• Điện chia đều (${m.totalHeadcount} người): ${fmtVND(m.elecPerPerson)}/người`);
+  lines.push(`• Nước (${fmtVND(m.waterRate)}/người × ${m.months}T): ${fmtVND(m.waterPerPerson)}/người`);
 
-  state.roommates.forEach(r => {
-    const paidRent = monthPayments.filter(p => p.rmId === r.id && p.type === 'RENT').reduce((s, p) => s + p.amount, 0);
-    const dueRent = Math.max(0, (r.rentShare || 0) - paidRent);
-
-    const utilShare = Math.round((totalUtil * (r.weight || 0)) / 100);
-    const paidUtil = monthPayments.filter(p => p.rmId === r.id && p.type === 'UTIL').reduce((s, p) => s + p.amount, 0);
-    const dueUtil = Math.max(0, utilShare - paidUtil);
-
-    lines.push(`\n👤 ${r.name}:`);
-    lines.push(`  • Tiền nhà: ${fmtVND(r.rentShare)} | Đã nộp: ${fmtVND(paidRent)} | Còn thiếu: ${fmtVND(dueRent)}`);
-    lines.push(`  • Điện nước (${r.weight}%): ${fmtVND(utilShare)} | Đã nộp: ${fmtVND(paidUtil)} | Còn thiếu: ${fmtVND(dueUtil)}`);
+  m.roommateDetails.forEach(d => {
+    lines.push(`\n👤 ${d.rm.name}:`);
+    lines.push(`  - Tiền nhà (${m.months}T): ${fmtVND(d.rentDue)} | Đã nộp: ${fmtVND(d.rentPaid)} | Còn thiếu: ${fmtVND(d.rentRemain)}`);
+    lines.push(`  - Điện + Nước: ${fmtVND(d.utilDue)} | Đã nộp: ${fmtVND(d.utilPaid)} | Còn thiếu: ${fmtVND(d.utilRemain)}`);
   });
 
   const text = lines.join('\n');
@@ -1504,7 +1625,6 @@ function resetToZeroClean() {
   state.transactions = [];
   state.housing.payments = [];
   state.housing.elecBill = 0;
-  state.housing.waterBill = 0;
   state.housing.deductedMonths = { RENT: '', UTIL: '' };
   state.backupMeta.lastBackupTxCount = 0;
   saveState('Đã đặt số dư về 0 ₫');
@@ -1870,10 +1990,21 @@ function renderAll() {
       </div>
     `).join('');
 
-    // 6. Tab 3: Tiền nhà riêng & Điện nước riêng
+    // 6. Tab 3: Tiền nhà & Điện chia đều / Nước 50k / Chu kỳ 1T-2T
+    const hm = getHousingCycleMetrics();
+
+    document.getElementById('btnCycle1').classList.toggle('active', hm.months === 1);
+    document.getElementById('btnCycle2').classList.toggle('active', hm.months === 2);
+    document.getElementById('cycleStatusSub').textContent =
+      `Kỳ thu ${hm.months} tháng • Sĩ số: ${hm.totalHeadcount} người (Bạn + ${state.roommates.length})`;
+
+    const prevRmVal = document.getElementById('payRmSel').value;
     document.getElementById('payRmSel').innerHTML = state.roommates.map(r =>
       `<option value="${r.id}">${r.name}</option>`
     ).join('');
+    if (prevRmVal && state.roommates.some(r => r.id === prevRmVal)) {
+      document.getElementById('payRmSel').value = prevRmVal;
+    }
 
     document.getElementById('housingEnvSel').innerHTML = state.envelopes.map(e =>
       `<option value="${e.id}" ${e.id === state.housing.targetEnvId ? 'selected' : ''}>${e.name}</option>`
@@ -1881,126 +2012,96 @@ function renderAll() {
 
     document.getElementById('myRentInp').value = formatWithCommas(state.housing.myRent || 0);
     document.getElementById('elecBillInp').value = formatWithCommas(state.housing.elecBill || 0);
-    document.getElementById('waterBillInp').value = formatWithCommas(state.housing.waterBill || 0);
+    document.getElementById('waterRateInp').value = formatWithCommas(hm.waterRate);
+
+    document.getElementById('formulaSummaryStrip').innerHTML = `
+      <div style="display:flex; justify-content:space-between;">
+        <span style="color:var(--sub);">⚡ Điện chia đều (${hm.totalHeadcount} người):</span>
+        <strong>${fmtVND(hm.elecPerPerson)} / người</strong>
+      </div>
+      <div style="display:flex; justify-content:space-between;">
+        <span style="color:var(--sub);">💧 Nước (${fmtVND(hm.waterRate)} × ${hm.months} tháng):</span>
+        <strong>${fmtVND(hm.waterPerPerson)} / người (Tổng ${fmtVND(hm.totalWaterAll)})</strong>
+      </div>
+      <div style="display:flex; justify-content:space-between; border-top:1px dashed rgba(255,255,255,0.1); padding-top:4px; margin-top:2px;">
+        <span style="color:#93c5fd;">Phần riêng của tôi (${hm.months}T):</span>
+        <strong style="color:#93c5fd;">Nhà ${fmtVND(hm.myRentDue)} • Điện+Nước ${fmtVND(hm.myUtilDue)}</strong>
+      </div>
+    `;
 
     const btnRent = document.getElementById('btnDeductMyRent');
     if (state.housing.deductedMonths.RENT === st.curMonthKey) {
-      btnRent.textContent = '✓ Đã trừ tháng này';
+      btnRent.textContent = '✓ Đã trừ tiền nhà';
       btnRent.className = 'btn btn-sm btn-deducted';
     } else {
-      btnRent.textContent = 'Trừ phần tôi';
+      btnRent.textContent = `Trừ nhà (${fmtVND(hm.myRentDue)})`;
       btnRent.className = 'btn btn-sm btn-ghost';
     }
 
     const btnUtil = document.getElementById('btnDeductMyUtil');
     if (state.housing.deductedMonths.UTIL === st.curMonthKey) {
-      btnUtil.textContent = '✓ Đã trừ tháng này';
+      btnUtil.textContent = '✓ Đã trừ điện nước';
       btnUtil.className = 'btn btn-sm btn-deducted';
     } else {
-      btnUtil.textContent = 'Trừ phần tôi';
+      btnUtil.textContent = `Trừ Đ/N (${fmtVND(hm.myUtilDue)})`;
       btnUtil.className = 'btn btn-sm btn-ghost';
     }
 
-    const selectedPayMonth = clampMonthKey(selectedPayMonthKey);
-    const monthPayments = state.housing.payments.filter(p => (p.monthKey || getCurrentMonthKey(p.date)) === selectedPayMonth);
+    let totalMustCollect = 0;
+    let totalCollectedAll = 0;
 
-    let totalRoommatesRent = 0;
-    let totalRentCollected = 0;
-
-    const rentRowsHtml = state.roommates.map(r => {
-      const mustPay = r.rentShare || 0;
-      const paid = monthPayments
-        .filter(p => p.rmId === r.id && p.type === 'RENT')
-        .reduce((s, p) => s + p.amount, 0);
-      const remain = Math.max(0, mustPay - paid);
-      totalRoommatesRent += mustPay;
-      totalRentCollected += paid;
+    document.getElementById('roommateCardsContainer').innerHTML = hm.roommateDetails.map(d => {
+      totalMustCollect += d.rentDue + d.utilDue;
+      totalCollectedAll += d.rentPaid + d.utilPaid;
 
       return `
-        <div class="rm-status-box">
-          <div>
-            <div style="font-size:13.5px; font-weight:600;">👤 ${r.name}: ${fmtVND(mustPay)}</div>
-            <div class="item-meta">Đã nộp: <strong style="color:var(--green)">${fmtVND(paid)}</strong> • Còn thiếu: <strong style="color:${remain > 0 ? 'var(--orange)' : 'var(--sub)'}">${fmtVND(remain)}</strong></div>
+        <div class="rm-person-card">
+          <div class="rm-person-head">
+            <div>
+              <div style="font-size:14.5px; font-weight:700;">👤 ${d.rm.name}</div>
+              <div class="item-meta">Mức tiền nhà: ${fmtVND(d.rm.rentShare)}/tháng</div>
+            </div>
+            <div style="display:flex; gap:5px;">
+              <button type="button" class="btn btn-sm btn-ghost" onclick="openRoommateModal('${d.rm.id}')">Sửa</button>
+              <button type="button" class="btn btn-sm btn-red" onclick="removeRoommate('${d.rm.id}')">Xóa</button>
+            </div>
           </div>
-          <div>
-            ${remain > 0
-              ? `<button type="button" class="btn btn-sm btn-green" onclick="recordRoommatePayment('${r.id}', 'RENT', ${remain})">Nộp đủ</button>`
-              : `<span class="badge-paid">✓ Đã nộp đủ</span>`
+
+          <div class="rm-sub-row">
+            <div>
+              <div style="font-size:12.5px; font-weight:600;">🏠 Tiền nhà (${hm.months}T): ${fmtVND(d.rentDue)}</div>
+              <div class="item-meta">Đã nộp: <strong style="color:var(--green)">${fmtVND(d.rentPaid)}</strong> • Thiếu: <strong style="color:${d.rentRemain > 0 ? 'var(--orange)' : 'var(--sub)'}">${fmtVND(d.rentRemain)}</strong></div>
+            </div>
+            ${d.rentRemain > 0
+              ? `<button type="button" class="btn btn-sm btn-green" onclick="recordRoommatePayment('${d.rm.id}', 'RENT', ${d.rentRemain})">Nộp đủ</button>`
+              : `<span class="badge-paid">✓ Đủ nhà</span>`
+            }
+          </div>
+
+          <div class="rm-sub-row">
+            <div>
+              <div style="font-size:12.5px; font-weight:600;">⚡💧 Điện + Nước: ${fmtVND(d.utilDue)}</div>
+              <div class="item-meta">Điện ${fmtVND(hm.elecPerPerson)} + Nước ${fmtVND(hm.waterPerPerson)} • Thiếu: <strong style="color:${d.utilRemain > 0 ? 'var(--orange)' : 'var(--sub)'}">${fmtVND(d.utilRemain)}</strong></div>
+            </div>
+            ${d.utilRemain > 0
+              ? `<button type="button" class="btn btn-sm btn-green" onclick="recordRoommatePayment('${d.rm.id}', 'UTIL', ${d.utilRemain})">Nộp đủ</button>`
+              : `<span class="badge-paid">✓ Đủ Đ/N</span>`
             }
           </div>
         </div>
       `;
     }).join('');
 
-    const grandTotalRent = (state.housing.myRent || 0) + totalRoommatesRent;
-    document.getElementById('rentBreakdownUI').innerHTML = `
-      <div class="card-sub" style="margin-bottom:6px;">
-        Tổng tiền nhà cả phòng: <strong>${fmtVND(grandTotalRent)}</strong> (Họ đã nộp: <strong style="color:var(--green)">${fmtVND(totalRentCollected)}</strong> / ${fmtVND(totalRoommatesRent)})
-      </div>
-      ${rentRowsHtml}
-    `;
-
-    const totalUtil = (state.housing.elecBill || 0) + (state.housing.waterBill || 0);
-    const rmWeightSum = state.roommates.reduce((s, r) => s + (r.weight || 0), 0);
-    const myUtilWeight = Math.max(0, 100 - rmWeightSum);
-    const myUtilShare = Math.round((totalUtil * myUtilWeight) / 100);
-
-    let totalUtilRoommates = 0;
-    let totalUtilCollected = 0;
-
-    const utilRowsHtml = state.roommates.map(r => {
-      const mustPay = Math.round((totalUtil * (r.weight || 0)) / 100);
-      const paid = monthPayments
-        .filter(p => p.rmId === r.id && p.type === 'UTIL')
-        .reduce((s, p) => s + p.amount, 0);
-      const remain = Math.max(0, mustPay - paid);
-      totalUtilRoommates += mustPay;
-      totalUtilCollected += paid;
-
-      return `
-        <div class="rm-status-box">
-          <div>
-            <div style="font-size:13.5px; font-weight:600;">👤 ${r.name} (${r.weight}%): ${fmtVND(mustPay)}</div>
-            <div class="item-meta">Đã nộp: <strong style="color:var(--green)">${fmtVND(paid)}</strong> • Còn thiếu: <strong style="color:${remain > 0 ? 'var(--orange)' : 'var(--sub)'}">${fmtVND(remain)}</strong></div>
-          </div>
-          <div>
-            ${remain > 0
-              ? `<button type="button" class="btn btn-sm btn-green" onclick="recordRoommatePayment('${r.id}', 'UTIL', ${remain})">Nộp đủ</button>`
-              : `<span class="badge-paid">✓ Đã nộp đủ</span>`
-            }
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    document.getElementById('utilBreakdownUI').innerHTML = `
-      <div class="card-sub" style="margin-bottom:6px;">
-        Tổng Điện + Nước: <strong>${fmtVND(totalUtil)}</strong> • Phần của tôi (${myUtilWeight}%): <strong>${fmtVND(myUtilShare)}</strong>
-      </div>
-      ${utilRowsHtml}
-    `;
-
-    document.getElementById('roommatesListUI').innerHTML = state.roommates.map(r => `
-      <div class="list-item">
-        <div class="item-left" onclick="openRoommateModal('${r.id}')" style="cursor:pointer;">
-          <div class="item-title">👤 ${r.name}</div>
-          <div class="item-meta">Tiền nhà: ${fmtVND(r.rentShare)} • Điện nước: ${r.weight}%</div>
-        </div>
-        <div class="item-right">
-          <button type="button" class="btn btn-sm btn-ghost" onclick="openRoommateModal('${r.id}')">Sửa</button>
-          <button type="button" class="btn btn-sm btn-red" onclick="removeRoommate('${r.id}')">Xóa</button>
-        </div>
-      </div>
-    `).join('');
+    updatePayHint();
 
     const payBox = document.getElementById('rmPaymentHistoryUI');
-    if (monthPayments.length === 0) {
-      payBox.innerHTML = `<div class="card-sub">Chưa có khoản nộp tiền nào trong tháng ${formatMonthDisplayMMYYYY(selectedPayMonth)}.</div>`;
+    if (hm.monthPayments.length === 0) {
+      payBox.innerHTML = `<div class="card-sub">Chưa có khoản nộp tiền nào trong tháng ${formatMonthDisplayMMYYYY(hm.selectedPayMonth)}.</div>`;
     } else {
-      payBox.innerHTML = monthPayments.map(p => `
+      payBox.innerHTML = hm.monthPayments.map(p => `
         <div class="list-item">
           <div class="item-left">
-            <div class="item-title">${p.rmName} nộp ${p.type === 'RENT' ? '🏠 Tiền nhà' : '⚡💧 Điện nước'}</div>
+            <div class="item-title">${p.rmName} nộp ${p.type === 'RENT' ? '🏠 Tiền nhà' : '⚡💧 Điện + Nước'}</div>
             <div class="item-meta">Ngày nộp: ${formatDateDDMMYYYY(p.date)}</div>
           </div>
           <div class="item-right">
@@ -2012,8 +2113,6 @@ function renderAll() {
     }
 
     // 7. Tab 4: Đối chiếu & Theo dõi sao lưu
-    const totalMustCollect = totalRoommatesRent + totalUtilRoommates;
-    const totalCollectedAll = totalRentCollected + totalUtilCollected;
     const totalStillUnpaid = Math.max(0, totalMustCollect - totalCollectedAll);
     const netCashflow = st.totalIncomeMonth - st.totalExpenseMonth;
 
@@ -2021,8 +2120,8 @@ function renderAll() {
       <div class="list-item"><span class="item-title">1. Tổng thu nhập cá nhân tháng này:</span><span class="amt-in">+${fmtVND(st.totalIncomeMonth)}</span></div>
       <div class="list-item"><span class="item-title">2. Tổng chi tiêu cá nhân tháng này:</span><span class="amt-out">-${fmtVND(st.totalExpenseMonth)}</span></div>
       <div class="list-item"><span class="item-title">3. Dư / Thâm hụt cá nhân:</span><strong style="color:${netCashflow >= 0 ? 'var(--green)' : 'var(--red)'}">${fmtVND(netCashflow)}</strong></div>
-      <div class="list-item"><span class="item-title">4. Tiền nhà + Điện nước HỌ ĐÃ NỘP:</span><span class="amt-in">${fmtVND(totalCollectedAll)}</span></div>
-      <div class="list-item"><span class="item-title">5. Tiền nhà + Điện nước HỌ CÒN THIẾU:</span><strong style="color:var(--orange)">${fmtVND(totalStillUnpaid)}</strong></div>
+      <div class="list-item"><span class="item-title">4. Tiền phòng + Điện nước HỌ ĐÃ NỘP:</span><span class="amt-in">${fmtVND(totalCollectedAll)}</span></div>
+      <div class="list-item"><span class="item-title">5. Tiền phòng + Điện nước HỌ CÒN THIẾU:</span><strong style="color:var(--orange)">${fmtVND(totalStillUnpaid)}</strong></div>
     `;
 
     renderBackupTracker();
