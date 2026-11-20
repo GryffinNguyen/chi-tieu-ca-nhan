@@ -130,7 +130,7 @@
       min-width: 82px;
     }
 
-    /* BẢNG CHỌN NGÀY ĐẦY ĐỦ TRONG THÁNG + CHUYỂN THÁNG TRƯỚC */
+    /* BẢNG CHỌN NGÀY NHẬP BÙ TRONG MODAL */
     .date-picker-trigger {
       background: var(--card2);
       border: 1px solid var(--border);
@@ -173,7 +173,6 @@
       cursor: pointer;
     }
     .mini-cal-month-label { font-size: 12.5px; font-weight: 700; }
-    .mini-cal-shortcuts { display: flex; gap: 5px; }
     .mini-cal-pill {
       background: var(--card2);
       border: 1px solid var(--border);
@@ -184,7 +183,6 @@
       font-weight: 600;
       cursor: pointer;
     }
-    .mini-cal-pill.active { background: rgba(59,130,246,0.2); color: #93c5fd; border-color: rgba(59,130,246,0.45); }
     .mini-cal-dow {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -212,22 +210,12 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      position: relative;
       font-variant-numeric: tabular-nums;
     }
     .mini-day-btn.empty { background: transparent; cursor: default; }
     .mini-day-btn.is-today { border-color: var(--green); }
     .mini-day-btn.selected { background: var(--blue); color: #fff; }
-    .mini-day-dot {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--orange);
-      margin-top: 1px;
-    }
-    .mini-day-btn.selected .mini-day-dot { background: #fff; }
 
-    /* THANH CHỌN NGÀY NHẬP GIAO DỊCH TRONG MODAL */
     .tx-date-bar {
       display: flex;
       justify-content: space-between;
@@ -342,7 +330,7 @@
         <div class="app-sub" id="headerSubText">Đang tải...</div>
       </div>
     </div>
-    <button class="icon-btn" onclick="togglePrivacy()" title="Ẩn/Hiện số tiền">👁️</button>
+    <button type="button" class="icon-btn" onclick="togglePrivacy()" title="Ẩn/Hiện số tiền">👁️</button>
   </div>
 
   <!-- MAIN CONTENT -->
@@ -396,38 +384,20 @@
             <div class="card-title">Quỹ Hiện Tại & Thu Nhập</div>
             <div class="card-sub" id="totalInflowLabel">Tổng thu đã nhận tháng này: 0 ₫</div>
           </div>
-          <button class="btn btn-sm btn-green" onclick="openTxModal('INCOME')">+ Nhập khoản thu</button>
+          <button type="button" class="btn btn-sm btn-green" onclick="openTxModal('INCOME')">+ Nhập khoản thu</button>
         </div>
         <div id="bucketsContainer"></div>
       </div>
 
-      <!-- LỊCH SỬ GIAO DỊCH (BẢNG ĐẦY ĐỦ NGÀY TRONG THÁNG + XEM CÁC THÁNG TRƯỚC) -->
+      <!-- LỊCH SỬ GIAO DỊCH TRONG THÁNG (BỘ CHỌN | < mm - yyyy > | ĐA NĂM + XẾP THEO NGÀY) -->
       <div class="card">
         <div class="card-header">
           <span class="card-title">Giao dịch Thu / Chi</span>
-          <button type="button" class="date-picker-trigger" id="txDateTrigger" onclick="toggleMiniCalendar()">
-            <span>📅</span>
-            <span id="txDateTriggerLabel">Hôm nay</span>
-            <span>▾</span>
-          </button>
-        </div>
-
-        <div class="mini-cal-popover" id="miniCalPopover">
-          <div class="mini-cal-month-bar">
-            <div style="display:flex; align-items:center; gap:6px;">
-              <button type="button" class="mini-cal-nav-btn" onclick="stepCalMonth(-1)" title="Tháng trước">&lt;</button>
-              <span class="mini-cal-month-label" id="miniCalMonthLabel">Tháng 11-2026</span>
-              <button type="button" class="mini-cal-nav-btn" onclick="stepCalMonth(1)" title="Tháng sau">&gt;</button>
-            </div>
-            <div class="mini-cal-shortcuts">
-              <button type="button" class="mini-cal-pill" id="pillToday" onclick="pickTodayFilter()">Hôm nay</button>
-              <button type="button" class="mini-cal-pill" id="pillAll" onclick="pickAllFilter()">Tất cả</button>
-            </div>
+          <div class="month-stepper" aria-label="Chọn tháng giao dịch">
+            <button type="button" class="month-step-btn" id="btnPrevTxMonth" onclick="stepTxMonth(-1)" title="Tháng trước">&lt;</button>
+            <span class="month-step-label" id="txMonthLabel">11 - 2026</span>
+            <button type="button" class="month-step-btn" id="btnNextTxMonth" onclick="stepTxMonth(1)" title="Tháng sau">&gt;</button>
           </div>
-          <div class="mini-cal-dow">
-            <div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div>
-          </div>
-          <div class="mini-cal-days" id="miniCalDaysGrid"></div>
         </div>
 
         <div id="recentTxList"></div>
@@ -442,7 +412,7 @@
             <div class="card-title">Danh mục Chi tiêu (Phong bì)</div>
             <div class="card-sub">Bấm "Sửa" để đổi tên, số tiền chạm nhanh hoặc số dư</div>
           </div>
-          <button class="btn btn-sm" onclick="openEnvelopeModal(null)">+ Thêm mục</button>
+          <button type="button" class="btn btn-sm" onclick="openEnvelopeModal(null)">+ Thêm mục</button>
         </div>
         <div id="envelopesListContainer"></div>
       </div>
@@ -478,7 +448,7 @@
             <input type="text" inputmode="numeric" class="money-inp" id="payAmountInp" placeholder="1,500,000">
           </div>
           <div style="display:flex; align-items:flex-end;">
-            <button class="btn btn-green" style="width:100%;" onclick="recordRoommatePayment()">+ Lưu đã nộp</button>
+            <button type="button" class="btn btn-green" style="width:100%;" onclick="recordRoommatePayment()">+ Lưu đã nộp</button>
           </div>
         </div>
       </div>
@@ -490,7 +460,7 @@
             <div class="card-title">🏠 Tiền Nhà Riêng</div>
             <div class="card-sub">Theo dõi riêng tiền nhà của bạn và của từng người</div>
           </div>
-          <button class="btn btn-sm btn-ghost" id="btnDeductMyRent" onclick="deductMyRentToEnvelope()">Trừ phần tôi</button>
+          <button type="button" class="btn btn-sm btn-ghost" id="btnDeductMyRent" onclick="deductMyRentToEnvelope()">Trừ phần tôi</button>
         </div>
         <div class="form-grid">
           <div>
@@ -512,7 +482,7 @@
             <div class="card-title">⚡💧 Tiền Điện Nước Riêng</div>
             <div class="card-sub">Tự động chia theo % của từng người và phần của bạn</div>
           </div>
-          <button class="btn btn-sm btn-ghost" id="btnDeductMyUtil" onclick="deductMyUtilToEnvelope()">Trừ phần tôi</button>
+          <button type="button" class="btn btn-sm btn-ghost" id="btnDeductMyUtil" onclick="deductMyUtilToEnvelope()">Trừ phần tôi</button>
         </div>
         <div class="form-grid">
           <div>
@@ -534,7 +504,7 @@
             <div class="card-title">👥 Người ở cùng (Thêm / Sửa / Xóa)</div>
             <div class="card-sub">Chỉnh tên, mức tiền nhà và % chia điện nước</div>
           </div>
-          <button class="btn btn-sm" onclick="openRoommateModal(null)">+ Thêm người</button>
+          <button type="button" class="btn btn-sm" onclick="openRoommateModal(null)">+ Thêm người</button>
         </div>
         <div id="roommatesListUI"></div>
       </div>
@@ -543,7 +513,7 @@
       <div class="card">
         <div class="card-header">
           <span class="card-title">Lịch sử họ nộp tiền</span>
-          <div class="month-stepper" aria-label="Chọn tháng">
+          <div class="month-stepper" aria-label="Chọn tháng nộp tiền">
             <button type="button" class="month-step-btn" id="btnPrevPayMonth" onclick="stepPayMonth(-1)" title="Tháng trước">&lt;</button>
             <span class="month-step-label" id="payMonthLabel">11 - 2026</span>
             <button type="button" class="month-step-btn" id="btnNextPayMonth" onclick="stepPayMonth(1)" title="Tháng sau">&gt;</button>
@@ -562,8 +532,8 @@
         </div>
         <div id="reconcileSummaryBox"></div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px;">
-          <button class="btn btn-green" onclick="rolloverMonth()">Kết sổ tháng mới</button>
-          <button class="btn btn-ghost" onclick="shareRoommateReport()">Xuất bảng kê phòng</button>
+          <button type="button" class="btn btn-green" onclick="rolloverMonth()">Kết sổ tháng mới</button>
+          <button type="button" class="btn btn-ghost" onclick="shareRoommateReport()">Xuất bảng kê phòng</button>
         </div>
       </div>
 
@@ -578,11 +548,11 @@
         <div class="backup-tracker-box" id="backupTrackerBox"></div>
 
         <div style="display:flex; flex-direction:column; gap:8px;">
-          <button class="btn" onclick="copyBackupCode()">📋 Copy mã sao lưu (Dán vào Ghi chú iPhone)</button>
-          <button class="btn btn-ghost" onclick="openRestoreModal()">📥 Dán mã sao lưu để khôi phục dữ liệu</button>
+          <button type="button" class="btn" onclick="copyBackupCode()">📋 Copy mã sao lưu (Dán vào Ghi chú iPhone)</button>
+          <button type="button" class="btn btn-ghost" onclick="openRestoreModal()">📥 Dán mã sao lưu để khôi phục dữ liệu</button>
           <div class="form-grid" style="margin-top:4px; margin-bottom:0;">
-            <button class="btn btn-ghost" onclick="exportBackupJson()">⬇️ Tải file .json</button>
-            <button class="btn btn-red" onclick="resetToZeroClean()">🗑️ Đặt lại về 0đ</button>
+            <button type="button" class="btn btn-ghost" onclick="exportBackupJson()">⬇️ Tải file .json</button>
+            <button type="button" class="btn btn-red" onclick="resetToZeroClean()">🗑️ Đặt lại về 0đ</button>
           </div>
         </div>
       </div>
@@ -594,7 +564,7 @@
   <div class="bottom-nav">
     <div class="nav-item active" id="navHome" onclick="switchTab('home', this)"><span>📊</span><span>Tổng quan</span></div>
     <div class="nav-item" id="navEnv" onclick="switchTab('envelopes', this)"><span>✉️</span><span>Các mục</span></div>
-    <button class="nav-plus" onclick="openTxModal('EXPENSE')">+</button>
+    <button type="button" class="nav-plus" onclick="openTxModal('EXPENSE')">+</button>
     <div class="nav-item" id="navRm" onclick="switchTab('roommates', this)"><span>🏠</span><span>Tiền phòng</span></div>
     <div class="nav-item" id="navRec" onclick="switchTab('reconcile', this)"><span>⚖️</span><span>Đối chiếu</span></div>
   </div>
@@ -785,6 +755,7 @@ function parseDateSafe(input) {
   return isNaN(parsed.getTime()) ? new Date() : parsed;
 }
 
+// Tạo mốc thời gian chuẩn để xếp ngày 21 > ngày 20 > ngày 19 (mới nhất trên đầu, cũ nhất dưới đáy)
 function buildIsoTimestampFromDMY(dmy) {
   const d = parseDateSafe(dmy);
   const now = new Date();
@@ -875,20 +846,16 @@ let modalMode = 'EXPENSE';
 let calcExpr = '';
 
 const _initNow = new Date();
+const _initMonthKey = clampMonthKey(getCurrentMonthKey(_initNow));
 let currentObservedDay = getTodayDDMMYYYY();
-let txFilterMode = 'TODAY';
-let userManuallyPickedDate = false;
-let miniCalOpen = false;
-let miniCalYear = _initNow.getFullYear();
-let miniCalMonth = _initNow.getMonth();
+let selectedTxMonthKey = _initMonthKey;
+let selectedPayMonthKey = _initMonthKey;
 
 // Ngày nhập bù trong modal giao dịch
 let selectedTxInputDMY = getTodayDDMMYYYY();
 let modalCalOpen = false;
 let modalCalYear = _initNow.getFullYear();
 let modalCalMonth = _initNow.getMonth();
-
-let selectedPayMonthKey = clampMonthKey(getCurrentMonthKey(_initNow));
 
 const defaultState = {
   weights: { NEEDS: 0.50, WANTS: 0.30, SAVINGS: 0.20 },
@@ -1014,7 +981,7 @@ if (navigator.storage && navigator.storage.persist) {
 (function registerInlineSW() {
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     const swCode = `
-      const CACHE = 'hybrid-v8';
+      const CACHE = 'hybrid-v9';
       self.addEventListener('install', e => {
         self.skipWaiting();
         e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./', 'index.html']).catch(() => {})));
@@ -1060,14 +1027,11 @@ function checkDayRollover() {
   const actualToday = getTodayDDMMYYYY();
   if (actualToday !== currentObservedDay) {
     const now = new Date();
+    const newMk = clampMonthKey(getCurrentMonthKey(now));
     currentObservedDay = actualToday;
-    selectedPayMonthKey = clampMonthKey(getCurrentMonthKey(now));
+    selectedTxMonthKey = newMk;
+    selectedPayMonthKey = newMk;
     selectedTxInputDMY = actualToday;
-    if (!userManuallyPickedDate) {
-      txFilterMode = 'TODAY';
-      miniCalYear = now.getFullYear();
-      miniCalMonth = now.getMonth();
-    }
     renderAll();
   }
 }
@@ -1141,13 +1105,16 @@ function recordIncome(amount, note, targetMode, chosenDMY) {
     }
   }
 
-  state.transactions.unshift({
-    id: 'tx_' + Date.now(),
+  const isoDate = buildIsoTimestampFromDMY(chosenDMY || getTodayDDMMYYYY());
+  selectedTxMonthKey = clampMonthKey(getCurrentMonthKey(isoDate));
+
+  state.transactions.push({
+    id: 'tx_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
     type: 'INCOME',
     amount,
     note: note || 'Khoản thu nhập',
     target: targetMode,
-    date: buildIsoTimestampFromDMY(chosenDMY || getTodayDDMMYYYY())
+    date: isoDate
   });
   saveState('Đã cộng khoản thu!');
 }
@@ -1157,13 +1124,16 @@ function recordExpense(amount, note, envId, chosenDMY) {
   const env = state.envelopes.find(e => e.id === envId) || state.envelopes[0];
   if (env) env.balance -= amount;
 
-  state.transactions.unshift({
-    id: 'tx_' + Date.now(),
+  const isoDate = buildIsoTimestampFromDMY(chosenDMY || getTodayDDMMYYYY());
+  selectedTxMonthKey = clampMonthKey(getCurrentMonthKey(isoDate));
+
+  state.transactions.push({
+    id: 'tx_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
     type: 'EXPENSE',
     amount,
     note: note || (env ? env.name : 'Chi tiêu'),
     envId: env ? env.id : '',
-    date: buildIsoTimestampFromDMY(chosenDMY || getTodayDDMMYYYY())
+    date: isoDate
   });
   saveState(`Đã ghi -${fmtVND(amount)}`);
 }
@@ -1506,12 +1476,11 @@ function openTxModal(mode) {
   calcExpr = '';
   document.getElementById('txNoteInp').value = '';
 
-  const baseDate = (txFilterMode !== 'TODAY' && txFilterMode !== 'ALL')
-    ? parseDateSafe(txFilterMode)
-    : new Date();
-  selectedTxInputDMY = formatDateDDMMYYYY(baseDate);
-  modalCalYear = baseDate.getFullYear();
-  modalCalMonth = baseDate.getMonth();
+  const now = new Date();
+  selectedTxInputDMY = formatDateDDMMYYYY(now);
+  const [sy, sm] = clampMonthKey(selectedTxMonthKey).split('-').map(Number);
+  modalCalYear = sy;
+  modalCalMonth = sm - 1;
   modalCalOpen = false;
   document.getElementById('modalCalPopover').classList.remove('open');
   document.getElementById('txInputDateLabel').textContent = selectedTxInputDMY;
@@ -1647,80 +1616,24 @@ function submitModalTx() {
   closeModal('txModal');
 }
 
-// ================= 9. BẢNG ĐẦY ĐỦ NGÀY TRONG THÁNG & STEPPER | < mm - yyyy > | =================
-function toggleMiniCalendar() {
-  miniCalOpen = !miniCalOpen;
-  document.getElementById('miniCalPopover').classList.toggle('open', miniCalOpen);
-  if (miniCalOpen) renderMiniCalendar();
-}
-
-function stepCalMonth(delta) {
-  miniCalMonth += delta;
-  if (miniCalMonth > 11) { miniCalMonth = 0; miniCalYear++; }
-  if (miniCalMonth < 0) { miniCalMonth = 11; miniCalYear--; }
-  renderMiniCalendar();
-}
-
-function pickTodayFilter() {
-  const now = new Date();
-  miniCalYear = now.getFullYear();
-  miniCalMonth = now.getMonth();
-  txFilterMode = 'TODAY';
-  userManuallyPickedDate = false;
-  miniCalOpen = false;
-  document.getElementById('miniCalPopover').classList.remove('open');
+// ================= 9. STEPPER THÁNG/NĂM | < mm - yyyy > | & SẮP XẾP NGÀY =================
+function stepTxMonth(delta) {
+  const minIdx = monthKeyToIndex(MIN_MONTH_KEY);
+  const maxIdx = monthKeyToIndex(MAX_MONTH_KEY);
+  const currentIdx = monthKeyToIndex(clampMonthKey(selectedTxMonthKey));
+  const nextIdx = Math.min(maxIdx, Math.max(minIdx, currentIdx + delta));
+  selectedTxMonthKey = indexToMonthKey(nextIdx);
   renderAll();
 }
 
-function pickAllFilter() {
-  txFilterMode = 'ALL';
-  userManuallyPickedDate = true;
-  miniCalOpen = false;
-  document.getElementById('miniCalPopover').classList.remove('open');
-  renderAll();
-}
-
-function pickSpecificDay(dmy) {
-  txFilterMode = dmy;
-  userManuallyPickedDate = true;
-  miniCalOpen = false;
-  document.getElementById('miniCalPopover').classList.remove('open');
-  renderAll();
-}
-
-function renderMiniCalendar() {
-  const todayDMY = getTodayDDMMYYYY();
-  const activeDayDMY = (txFilterMode === 'TODAY') ? todayDMY : (txFilterMode === 'ALL' ? '' : txFilterMode);
-
-  document.getElementById('miniCalMonthLabel').textContent = `Tháng ${pad2(miniCalMonth + 1)}-${miniCalYear}`;
-  document.getElementById('pillToday').classList.toggle('active', txFilterMode === 'TODAY');
-  document.getElementById('pillAll').classList.toggle('active', txFilterMode === 'ALL');
-
-  const txDatesSet = new Set(state.transactions.map(t => formatDateDDMMYYYY(t.date)));
-  const firstOfMonth = new Date(miniCalYear, miniCalMonth, 1);
-  const startOffset = (firstOfMonth.getDay() + 6) % 7;
-  const daysInMonth = new Date(miniCalYear, miniCalMonth + 1, 0).getDate();
-
-  let html = '';
-  for (let i = 0; i < startOffset; i++) {
-    html += `<div class="mini-day-btn empty"></div>`;
-  }
-
-  for (let d = 1; d <= daysInMonth; d++) {
-    const dmy = `${pad2(d)}-${pad2(miniCalMonth + 1)}-${miniCalYear}`;
-    const isToday = (dmy === todayDMY);
-    const isSelected = (dmy === activeDayDMY);
-    const hasTx = txDatesSet.has(dmy);
-
-    html += `
-      <button type="button" class="mini-day-btn ${isToday ? 'is-today' : ''} ${isSelected ? 'selected' : ''}" onclick="pickSpecificDay('${dmy}')">
-        <span>${d}</span>
-        ${hasTx ? '<span class="mini-day-dot"></span>' : ''}
-      </button>
-    `;
-  }
-
-  document.getElementById('miniCalDaysGrid').innerHTML = html;
+function syncTxMonthStepper() {
+  selectedTxMonthKey = clampMonthKey(selectedTxMonthKey);
+  const labelEl = document.getElementById('txMonthLabel');
+  const prevBtn = document.getElementById('btnPrevTxMonth');
+  const nextBtn = document.getElementById('btnNextTxMonth');
+  if (labelEl) labelEl.textContent = formatMonthDisplayMMYYYY(selectedTxMonthKey);
+  if (prevBtn) prevBtn.disabled = (selectedTxMonthKey <= MIN_MONTH_KEY);
+  if (nextBtn) nextBtn.disabled = (selectedTxMonthKey >= MAX_MONTH_KEY);
 }
 
 function stepPayMonth(delta) {
@@ -1740,6 +1653,14 @@ function syncPayMonthStepper() {
   if (labelEl) labelEl.textContent = formatMonthDisplayMMYYYY(selectedPayMonthKey);
   if (prevBtn) prevBtn.disabled = (selectedPayMonthKey <= MIN_MONTH_KEY);
   if (nextBtn) nextBtn.disabled = (selectedPayMonthKey >= MAX_MONTH_KEY);
+}
+
+// Khóa sắp xếp ngày: ngày mới hơn nằm trên (21 -> 20 -> 19), cùng ngày thì giao dịch thêm sau nằm trên
+function getTxSortKey(tx) {
+  const d = parseDateSafe(tx.date);
+  const dayNum = d.getDate();
+  const createdTs = parseInt((tx.id || '').split('_')[1], 10) || d.getTime() || 0;
+  return { dayNum, createdTs };
 }
 
 function renderBackupTracker() {
@@ -1782,6 +1703,7 @@ function renderAll() {
     const todayDMY = getTodayDDMMYYYY();
     currentObservedDay = todayDMY;
 
+    syncTxMonthStepper();
     syncPayMonthStepper();
 
     const savingsTotal = state.envelopes.filter(e => e.bucket === 'SAVINGS').reduce((s, e) => s + e.balance, 0);
@@ -1844,33 +1766,22 @@ function renderAll() {
       `;
     }).join('');
 
-    // 4. Lịch sử giao dịch theo ngày dd-mm-yyyy
-    const triggerLabelEl = document.getElementById('txDateTriggerLabel');
-    let targetDayDMY = '';
-    if (txFilterMode === 'TODAY') {
-      targetDayDMY = todayDMY;
-      triggerLabelEl.textContent = `Hôm nay (${todayDMY})`;
-    } else if (txFilterMode === 'ALL') {
-      triggerLabelEl.textContent = 'Tất cả ngày';
-    } else {
-      targetDayDMY = txFilterMode;
-      triggerLabelEl.textContent = txFilterMode;
-    }
-
-    if (miniCalOpen) renderMiniCalendar();
-
-    const filteredTx = (txFilterMode === 'ALL')
-      ? state.transactions
-      : state.transactions.filter(t => formatDateDDMMYYYY(t.date) === targetDayDMY);
+    // 4. Toàn bộ giao dịch trong tháng đang chọn, xếp ngày mới hơn lên trên (21 -> 20 -> 19)
+    const activeTxMonth = clampMonthKey(selectedTxMonthKey);
+    const monthTransactions = state.transactions
+      .filter(t => getCurrentMonthKey(t.date) === activeTxMonth)
+      .sort((a, b) => {
+        const ka = getTxSortKey(a);
+        const kb = getTxSortKey(b);
+        if (kb.dayNum !== ka.dayNum) return kb.dayNum - ka.dayNum;
+        return kb.createdTs - ka.createdTs;
+      });
 
     const txBox = document.getElementById('recentTxList');
-    if (filteredTx.length === 0) {
-      const emptyMsg = (txFilterMode === 'ALL')
-        ? 'Chưa có giao dịch nào.'
-        : `Chưa có giao dịch nào trong ngày ${targetDayDMY}.`;
-      txBox.innerHTML = `<div class="card-sub" style="padding:8px 0;">${emptyMsg}</div>`;
+    if (monthTransactions.length === 0) {
+      txBox.innerHTML = `<div class="card-sub" style="padding:8px 0;">Chưa có giao dịch nào trong tháng ${formatMonthDisplayMMYYYY(activeTxMonth)}.</div>`;
     } else {
-      txBox.innerHTML = filteredTx.slice(0, 30).map(t => `
+      txBox.innerHTML = monthTransactions.map(t => `
         <div class="list-item">
           <div class="item-left">
             <div class="item-title">${t.note}</div>
